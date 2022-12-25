@@ -20,7 +20,7 @@
           position="right"
           >
             <v-sheet-text>
-              <h1 class="font-bold orange--text">Mes esam BidBuild</h1>
+              <h1 class="font-bold orange--text">Mēs esam BidBuild</h1>
               <h3 class="font-weight-bold indigo--text">  Mēs esam jauna BidBuild sistēma, kur mūsu lietotājiem būs iespējams 
                 atrast sev visizdevīgāko būvniecības darbu pakalpojumu piegādātāju, atkarībā no vietas, cenas un kvalitātes, bet lietotājiem, kuri piedāvā pakalpojumus, būs iespējams paplašināt sev potenciālo klientu daudzumu.</h3>
             </v-sheet-text>
@@ -51,7 +51,7 @@
                   middle
                   >
                   <Nuxt-link to="/PakalpojumuLists" target="_blank" style="text-decoration:none">
-                  Sakt
+                  Sākt
                   </Nuxt-link>
                 </v-btn>
                 <v-spacer></v-spacer>

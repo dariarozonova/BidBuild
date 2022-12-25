@@ -14,7 +14,7 @@
         outlined
         color="indigo"
         small>
-          <NuxtLink to="/SignIn" target="_blank">
+          <NuxtLink to="/login" target="_blank">
             Ienākt
           </NuxtLink>
           <v-icon
@@ -28,7 +28,7 @@
         outlined
         color="indigo"
         small>
-          <NuxtLink to="/LogIn" target="_blank">
+          <NuxtLink to="/register" target="_blank">
               Reģistrēties
           </NuxtLink>
         <v-icon
