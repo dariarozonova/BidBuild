@@ -32,7 +32,7 @@
                     v => !!v || (v && v.length > 7) || 'E-Pastā ir jābūt minimāli 8 simboliem',]"
                     counter="50"
                     hint="E-pasts, kuru jūs izmantosiet lai ielogotos jūsu kontā"
-                    label="E-Pasts"
+                    label="E-pasts"
                 ></v-text-field>
                 <v-text-field
                     v-model="name"

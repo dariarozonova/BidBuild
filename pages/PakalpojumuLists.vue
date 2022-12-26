@@ -8,7 +8,7 @@
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
-            label="Search"
+            label="Meklēt"
             single-line
             hide-details
           ></v-text-field>
@@ -37,7 +37,6 @@ export default {
           {
             text: 'Sludinājumi',
             align: 'start',
-            filterable: false,
             value: 'sludinajums',
           },
           { text: 'Pilsēta', value: 'pilseta' },
@@ -46,10 +45,58 @@ export default {
         ],
         sludinajumi: [
           {
-            sludinajums: "a",
-            pilseta:"a",
-            sfera:"a",
-            cena: 1,
+            sludinajums: "Apkures sistēmas maiņa un remonts",
+            pilseta:"Rīga",
+            sfera:"Iekšdarbi",
+            cena: 60,
+          },
+          {
+            sludinajums: "Logu furnitūras maiņa",
+            pilseta:"Vangaži",
+            sfera:"Ārejie darbi",
+            cena: 100,
+          },
+          {
+            sludinajums: "Santehnikas maiņa",
+            pilseta:"Sigulda",
+            sfera:"Iekšdarbi",
+            cena: 120,
+          },
+          {
+            sludinajums: "Dzīvojamo māju projektēšana",
+            pilseta:"Valmiera",
+            sfera:"Projektēšana",
+            cena: 75,
+          },
+          {
+            sludinajums: "Pieminekļu arhitektūras projektēšana",
+            pilseta:"Rīga",
+            sfera:"Arhitektūra",
+            cena: 95,
+          },
+          {
+            sludinajums: "Nostiepjamie griesti",
+            pilseta:"Ģipka",
+            sfera:"Iekšdarbi",
+            cena: 100,
+          },
+          {
+            sludinajums: "Parketa un lamināta ieklāšana ",
+            pilseta:"Garkalne",
+            sfera:"Iekšdarbi",
+            cena: 55,
+          },
+          {
+            sludinajums: "Roku darba skulptūras priekš darza",
+            pilseta:"Talsi",
+            sfera:"Arhitektūra",
+            cena: 80,
+          },
+          {
+            sludinajums: "Tapešu līmēšana ",
+            pilseta:"Rīga",
+            sfera:"Iekšdarbi",
+            cena: 50,
           },
         ],
       }
