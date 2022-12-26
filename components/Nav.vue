@@ -14,7 +14,7 @@
         outlined
         color="indigo"
         small>
-          <NuxtLink to="/login" target="_blank">
+          <NuxtLink to="/login" replace>
             Ienākt
           </NuxtLink>
           <v-icon
@@ -28,7 +28,7 @@
         outlined
         color="indigo"
         small>
-          <NuxtLink to="/register" target="_blank">
+          <NuxtLink to="/register" replace>
               Reģistrēties
           </NuxtLink>
         <v-icon
@@ -37,16 +37,18 @@
         mdi-account-plus-outline
         </v-icon>
         </v-btn>
-      <v-divider vertical class="mx-md-5 mx-2"/>
+        <v-divider vertical class="mx-md-5 mx-2 transparent"/>
       <v-btn
         outlined
         color="indigo"
         small>
-        Meklēt
+          <NuxtLink to="/pakalpojumulists" target="_blank">
+              Sludinājumi
+          </NuxtLink>
         <v-icon
         right
         dark>
-        mdi-magnify
+        mdi-shopping-search-outline
         </v-icon>
         </v-btn>
     </v-app-bar>

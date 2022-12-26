@@ -24,18 +24,18 @@
           <form @submit.prevent="login">
             <v-card-text>
                 <v-text-field
-                v-model="email"
+                    v-model="email"
                     :rules="[v => !!v || 'Šis lauks ir nepieciešams',
                     v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-Pastam jābūt pareizā formātā.',]"
                     counter="50"
                     label="E-pasts"
                 ></v-text-field>
                 <v-text-field
-                label="Parole"
-                input type="password" 
-                id="Email" 
-                v-model="password" 
-                required>
+                    label="Parole"
+                    :rules="[v => !!v || 'Šis lauks ir nepieciešams',]"
+                    input type="password" 
+                    v-model="password" 
+                    required>
                 </v-text-field>
               </v-card-text>
               <v-layout justify-center>
@@ -44,7 +44,9 @@
                   outlined
                   color="indigo"
                   >
-                  Ienākt
+                  <Nuxt-link to="/pakalpojumulists" replace style="text-decoration:none">
+                  Sākt
+                  </Nuxt-link>
                 </v-btn>
               </v-card-actions>
               </v-layout>

@@ -80,7 +80,7 @@
               <v-card-actions>
                   <v-btn
                   outlined
-                  color="blue"
+                  color="indigo"
                   >
                   Reģistreties
                 </v-btn>

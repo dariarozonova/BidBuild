@@ -50,7 +50,7 @@
                   color="orange"
                   middle
                   >
-                  <Nuxt-link to="/PakalpojumuLists" target="_blank" style="text-decoration:none">
+                  <Nuxt-link to="/pakalpojumulists" target="_blank" style="text-decoration:none">
                   Sākt
                   </Nuxt-link>
                 </v-btn>
