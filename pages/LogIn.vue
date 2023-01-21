@@ -20,37 +20,35 @@
         </v-card-title>
 
         <v-window>
-        <v-window-item>
-          <form @submit.prevent="login">
+          <v-window-item>
             <v-card-text>
+              <v-form v-model="isFormValid" :lazy-validation="false" ref="form">
                 <v-text-field
                     v-model="email"
-                    :rules="[v => !!v || 'Šis lauks ir nepieciešams',
-                    v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-Pastam jābūt pareizā formātā.',]"
-                    counter="50"
+                    :rules="emailRules"
                     label="E-pasts"
                 ></v-text-field>
                 <v-text-field
                     label="Parole"
-                    :rules="[v => !!v || 'Šis lauks ir nepieciešams',]"
+                    :rules="passwordRules"
                     input type="password" 
                     v-model="password" 
                     required>
                 </v-text-field>
-              </v-card-text>
-              <v-layout justify-center>
+              </v-form>
+            </v-card-text>
+            <v-layout justify-center>
               <v-card-actions>
-                  <v-btn
+                <v-btn
+                  @click="submitForm()"
                   outlined
+                  :disabled="!isFormValid"
                   color="indigo"
                   >
-                  <Nuxt-link to="/pakalpojumulists" replace style="text-decoration:none">
-                  Sākt
-                  </Nuxt-link>
+                  Autentificēties
                 </v-btn>
               </v-card-actions>
-              </v-layout>
-            </form>
+            </v-layout>
           </v-window-item>
         </v-window>
       </v-card>
@@ -59,9 +57,53 @@
 </template>
 
 <script>
-  export default {
-      
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      emailRules: [v => !!v || 'Šis lauks ir nepieciešams', v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-Pastam jābūt pareizā formātā.',],
+      passwordRules: [v => !!v || 'Šis lauks ir nepieciešams',],
+      responseData: '',
+      snackbar: false,
+      isFormValid: false
+    }
+  },
+
+  methods: {
+
+    async submitForm() {
+      console.log("clicked!")
+      const formData = {
+        email: this.email,
+        password: this.password
+      }
+      try {
+
+        const response = await this.$axios.post('/api/auth', formData)
+
+        if(response.data.emailTaken){
+          this.showSnackbar(error, response.data.message)
+        } else if (response.status === 200) {
+          this.showSnackbar(success, response.data.message)
+        } else if (response.status === 409) {
+          this.showSnackbar(error, 'This email is already registered')
+        } else {
+          this.showSnackbar(error, 'An error occurred')
+        }
+      } catch (error) {
+        console.log(error)
+        this.showSnackbar('Error', error.message)
+      }
+    },
+
+    showSnackbar(type, message) {
+      this.responseData = message
+      this.snackbarType = type
+      this.snackbar = true
+    }
   }
+}
     
 </script>
 
