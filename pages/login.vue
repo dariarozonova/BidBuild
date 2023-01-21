@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
+
 export default {
   data() {
     return {
@@ -87,6 +89,16 @@ export default {
         if (response.status === 200) {
           const { name, surname } = response.data.data;
           this.showSnackbar('green', `Autentifikācija veiksmīga - Lietotājs ${name} ${surname}`)
+          this.$store.commit('SET_AUTHENTICATED', true)
+          this.$store.commit('SET_USER', { name, surname })
+          console.log(this.$store.state.authenticated, this.$store.state.user.name, this.$store.state.user.surname)
+          console.log(response.data.jwt_token)
+          Cookies.set('token', response.data.jwt_token, { expires: 1 })
+          sessionStorage.setItem('token', response.data.jwt_token)
+          setTimeout(() => {
+            this.$router.push({ path: '/' });
+          }, 3000);
+
         } else {
           this.showSnackbar('red', 'An error occurred')
         }

@@ -8,6 +8,8 @@ const register = require('./register')
 
 const login = require('./login')
 
+const tokenValidator = require('./verifyToken')
+
 
 const app = express()
 
@@ -31,6 +33,8 @@ const connection = mysql.createConnection({
 app.use('/api/register', register)
 
 app.use('/api/login', login)
+
+app.use('/api/validateToken', tokenValidator)
 
 
 connection.connect((error) => {

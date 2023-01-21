@@ -1,11 +1,13 @@
 const express = require('express')
-
+require('dotenv').config()
 const loginRouter = express.Router()
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const db = require('./db')
 
 const jwt = require('jsonwebtoken');
+
+const secret = process.env.SECRET_KEY
 
 // In your login route
 loginRouter.post('/', async (req, res, next) => {
@@ -35,7 +37,18 @@ loginRouter.post('/', async (req, res, next) => {
       return res.status(401).json({ message: 'Nepareizs E-Pasts vai parole', successful: false });
     }
 
-    return res.status(200).json({ message: 'Autentifikācija veiksmīga', successful: true, data: {name: emailCheck.name, surname: emailCheck.surname} });
+    const payload = {
+      name: emailCheck.name,
+      surname: emailCheck.surname,
+      authenticated: true
+    }
+    
+    const token = jwt.sign(payload, secret, { expiresIn: '24h' })
+
+    return res.status(200).json({ jwt_token: token, message: 'Autentifikācija veiksmīga', successful: true, data: {name: emailCheck.name, surname: emailCheck.surname} });
+
+    
+
   } catch (error) {
       console.log(error);
       return res.status(500).json({ message: 'Ir notikusi kļūda, lūdzu sazinieties ar sistēmas administratoru', successful: false });
