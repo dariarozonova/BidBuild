@@ -60,10 +60,3 @@ export default {
 
 }
 </script>
-
-<style>
-.v-toolbar-title {
-  font-family: "Trebuchet MS";
-}
-
-</style>

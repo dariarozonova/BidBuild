@@ -21,7 +21,7 @@
           >
             <v-sheet-text>
               <h1 class="font-weight-bold orange--text">Mēs esam BidBuild</h1>
-              <h3 class="font-weight-thin indigo--text">  Mēs esam jauna BidBuild sistēma, kur mūsu lietotājiem būs iespējams 
+              <h3 class="font-weight-bold indigo--text">  Mēs esam jauna BidBuild sistēma, kur mūsu lietotājiem būs iespējams 
                 atrast sev visizdevīgāko būvniecības darbu pakalpojumu piegādātāju, atkarībā no vietas, cenas un kvalitātes, bet lietotājiem, kuri piedāvā pakalpojumus, būs iespējams paplašināt sev potenciālo klientu daudzumu.</h3>
             </v-sheet-text>
           </v-sheet>
