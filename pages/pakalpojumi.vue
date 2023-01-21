@@ -1,8 +1,9 @@
 <template>
   <div>
     <Nav />
+    <v-container class="pakalpojumi">
     <v-spacer />
-    <v-container class="mt-4" v-bind:style="{ background: `orange`, backgroundSize: 'cover' }">
+    <v-container class="mt-4">
       <v-card>
         <v-card-title>
           <v-text-field
@@ -23,6 +24,7 @@
       </v-card>
     </v-container>
     <Footer />
+    </v-container>
   </div>
 </template>
 
@@ -102,3 +104,12 @@ export default {
     },
   }
 </script>
+
+<style>
+.pakalpojumi {
+  background: url('static/wall.jpg');
+  background-size: cover;
+  max-width: 100%;
+  height: auto;
+}
+</style>

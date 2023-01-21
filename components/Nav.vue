@@ -6,7 +6,7 @@
       light
     >   
     <v-divider vertical class="mx-md-3 mx-2 transparent"/>
-        <v-toolbar-title @click="$router.push('/')" class="text-md-h5 font-weight-bold pointer indigo--text">
+        <v-toolbar-title @click="$router.push('/')" class="text-md-h5 font-weight-bold curson-pointer indigo--text" >
             BidBuild
         </v-toolbar-title>
         <v-spacer/>
@@ -42,7 +42,7 @@
         outlined
         color="indigo"
         small>
-          <NuxtLink to="/pakalpojumulists" target="_blank">
+          <NuxtLink to="/pakalpojumi" target="_blank">
               Sludinājumi
           </NuxtLink>
         <v-icon
@@ -60,7 +60,3 @@ export default {
 
 }
 </script>
-
-<style>
-
-</style>
