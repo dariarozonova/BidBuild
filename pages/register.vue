@@ -127,7 +127,8 @@ export default {
       confirmPasswordRules: [v => !!v || "Šis lauks ir nepieciešams"],
       responseData: '',
       snackbar: false,
-      isFormValid: false
+      isFormValid: false,
+      snackbarColor: ''
     }
   },
 
@@ -167,7 +168,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.showSnackbar(red, error.message)
+        this.showSnackbar('red', error.message)
       }
     },
 
