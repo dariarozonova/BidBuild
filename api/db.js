@@ -28,6 +28,26 @@ db.checkIfExists = (email, role) => {
     });
   });
 }
+
+db.getUserPassword = (email) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const seller = await db.getSellerByEmail(email);
+      if (seller) {
+        resolve({ exists: true, role: 'seller', name: seller.Vards, surname: seller.Uzvards, password: seller.Parole });
+      }
+
+      const buyer = await db.getBuyerByEmail(email);
+      if (buyer) {
+        resolve({ exists: true, role: 'buyer', name: buyer.Vards, surname: buyer.Uzvards, password: buyer.Parole });
+      }
+
+      resolve({ exists: false });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
  
 db.getAllSellers = () =>{
   return new Promise((resolve, reject)=>{

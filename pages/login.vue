@@ -11,6 +11,7 @@
                 BidBuild
             </v-toolbar-title>
         </v-app-bar>
+        <v-snackbar v-model="snackbar" :top="true" :timeout="3000" :color=this.snackbarColor>{{ responseData }}</v-snackbar>
       </div> 
       <v-card
         class="mt-13 mx-auto"
@@ -66,7 +67,8 @@ export default {
       passwordRules: [v => !!v || 'Šis lauks ir nepieciešams',],
       responseData: '',
       snackbar: false,
-      isFormValid: false
+      isFormValid: false,
+      snackbarColor: ''
     }
   },
 
@@ -80,26 +82,35 @@ export default {
       }
       try {
 
-        const response = await this.$axios.post('/api/auth', formData)
+        const response = await this.$axios.post('/api/login', formData)
 
-        if(response.data.emailTaken){
-          this.showSnackbar(error, response.data.message)
-        } else if (response.status === 200) {
-          this.showSnackbar(success, response.data.message)
-        } else if (response.status === 409) {
-          this.showSnackbar(error, 'This email is already registered')
+        if (response.status === 200) {
+          const { name, surname } = response.data.data;
+          this.showSnackbar('green', `Autentifikācija veiksmīga - Lietotājs ${name} ${surname}`)
         } else {
-          this.showSnackbar(error, 'An error occurred')
+          this.showSnackbar('red', 'An error occurred')
         }
+
+        if(response.status === 401) {
+          this.showSnackbar('red', response.data.message)
+          return;
+        }
+
       } catch (error) {
-        console.log(error)
-        this.showSnackbar('Error', error.message)
+        if(error.response){
+          if (error.response.status === 401) {
+            this.showSnackbar('red', error.response.data.message)
+          }
+        } else {
+          console.log(error)
+          this.showSnackbar('red', error.message)
+        }
       }
     },
 
-    showSnackbar(type, message) {
+    showSnackbar(color, message) {
       this.responseData = message
-      this.snackbarType = type
+      this.snackbarColor = color
       this.snackbar = true
     }
   }

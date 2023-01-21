@@ -93,6 +93,13 @@
                 >
                 Reģistreties
               </v-btn>
+              <v-btn
+                @click="routeLogin()"
+                outlined
+                color="indigo"
+                >
+                Jau esat izveidojis profilu?
+              </v-btn>
             </v-card-actions>
             </v-layout>
         </v-window-item>
@@ -127,7 +134,8 @@ export default {
       confirmPasswordRules: [v => !!v || "Šis lauks ir nepieciešams"],
       responseData: '',
       snackbar: false,
-      isFormValid: false
+      isFormValid: false,
+      snackbarColor: ''
     }
   },
 
@@ -160,6 +168,10 @@ export default {
           this.showSnackbar('red', response.data.message)
         } else if (response.status === 200) {
           this.showSnackbar('green', response.data.message)
+          setTimeout(() => {
+            this.$router.push({ path: '/' });
+          }, 3000);
+
         } else if (response.status === 409) {
           this.showSnackbar('red', 'This email is already registered')
         } else {
@@ -167,8 +179,12 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.showSnackbar(red, error.message)
+        this.showSnackbar('red', error.message)
       }
+    },
+
+    routeLogin(){
+      this.$router.push({path: '/login'})
     },
 
     showSnackbar(color, message) {
