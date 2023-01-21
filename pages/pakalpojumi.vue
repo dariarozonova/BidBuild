@@ -31,7 +31,6 @@ import Nav from '../components/Nav.vue'
 export default {
     data () {
       return {
-        imageUrl: 'wall.jpg',
         search: '',
         headers: [
           {
