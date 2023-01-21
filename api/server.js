@@ -42,7 +42,7 @@ app.post('/api/register', async (req, res) => {
     // check if the required fields are present
     console.log(req.body)
 
-    if(!!req.body.name || !req.body.surname || !req.body.number || !req.body.email || !req.body.password || !req.body.role){
+    if(!req.body.name || !req.body.surname || !req.body.number || !req.body.email || !req.body.password || !req.body.role){
       return res.status(400).send({ error: true, message: 'Viens vai vairāki lauciņi nav aizpildīti' })
     }
 

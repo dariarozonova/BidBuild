@@ -12,7 +12,7 @@
           </v-toolbar-title>
       </v-app-bar>
     </div>
-    <v-snackbar v-model="snackbar" :top="true" :timeout="3000" :color="responseData.error ? 'error' : 'success'">{{ responseData }}</v-snackbar>
+    <v-snackbar v-model="snackbar" :top="true" :timeout="3000" :color=this.snackbarColor>{{ responseData }}</v-snackbar>
     <v-divider horizontal class="mx-md-10 mx-2 transparent"/>
 
       <v-card
@@ -157,23 +157,23 @@ export default {
         const response = await this.$axios.post('/api/register', formData)
 
         if(response.data.emailTaken){
-          this.showSnackbar(error, response.data.message)
+          this.showSnackbar('red', response.data.message)
         } else if (response.status === 200) {
-          this.showSnackbar(success, response.data.message)
+          this.showSnackbar('green', response.data.message)
         } else if (response.status === 409) {
-          this.showSnackbar(error, 'This email is already registered')
+          this.showSnackbar('red', 'This email is already registered')
         } else {
-          this.showSnackbar(error, 'An error occurred')
+          this.showSnackbar('red', 'An error occurred')
         }
       } catch (error) {
         console.log(error)
-        this.showSnackbar('Error', error.message)
+        this.showSnackbar(red, error.message)
       }
     },
 
-    showSnackbar(type, message) {
+    showSnackbar(color, message) {
       this.responseData = message
-      this.snackbarType = type
+      this.snackbarColor = color
       this.snackbar = true
     }
   }
