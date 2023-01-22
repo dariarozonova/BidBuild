@@ -55,7 +55,6 @@ db.getAllSellers = () =>{
       if(error){
         return reject(error);
       }
-
       return resolve(users);
     });
   });

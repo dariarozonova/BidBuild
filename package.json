@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"SET NODE_OPTIONS=--openssl-legacy-provider && nuxt\" \"node ./api/server.js\"",
+    "dev": "concurrently \"NODE_OPTIONS=--openssl-legacy-provider nuxt\" \"node ./api/server.js\"",
     "devnuxt": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt",
     "build": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
     "start": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt start",
