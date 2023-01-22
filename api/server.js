@@ -1,8 +1,10 @@
 require('dotenv').config()
 const express = require('express')
+const app = express()
 const mysql = require('mysql2')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const session = require('express-session')
 
 const register = require('./register')
 
@@ -10,8 +12,17 @@ const login = require('./login')
 
 const tokenValidator = require('./verifyToken')
 
+const sessionValidator = require('./verifySession')
 
-const app = express()
+
+
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: false
+}))
+
+
 
 app.use(cors())
 
@@ -35,6 +46,8 @@ app.use('/api/register', register)
 app.use('/api/login', login)
 
 app.use('/api/validateToken', tokenValidator)
+
+app.use('/api/validateSession', sessionValidator)
 
 
 connection.connect((error) => {

@@ -1,13 +1,25 @@
 const express = require('express')
+const session = require('express-session')
 require('dotenv').config()
 const loginRouter = express.Router()
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const db = require('./db')
 
-const jwt = require('jsonwebtoken');
+const sessionSecret = process.env.SESSION_KEY
 
-const secret = process.env.SECRET_KEY
+loginRouter.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: false // set to true if HTTPS
+  }
+}));
+
+
+
 
 // In your login route
 loginRouter.post('/', async (req, res, next) => {
@@ -37,15 +49,17 @@ loginRouter.post('/', async (req, res, next) => {
       return res.status(401).json({ message: 'Nepareizs E-Pasts vai parole', successful: false });
     }
 
-    const payload = {
-      name: emailCheck.name,
-      surname: emailCheck.surname,
-      authenticated: true
-    }
-    
-    const token = jwt.sign(payload, secret, { expiresIn: '24h' })
+    req.session.user = { name: emailCheck.name, surname: emailCheck.surname, authenticated: true }
 
-    return res.status(200).json({ jwt_token: token, message: 'Autentifikācija veiksmīga', successful: true, data: {name: emailCheck.name, surname: emailCheck.surname} });
+    const sessionId = req.sessionID
+
+    req.session.save();
+
+    
+
+    console.log(req.session.user, sessionId)
+
+    return res.status(200).json({ sessionshit: req.session.user, sessionid: sessionId, message: 'Autentifikācija veiksmīga', successful: true, data: {name: emailCheck.name, surname: emailCheck.surname} });
 
     
 
@@ -53,6 +67,15 @@ loginRouter.post('/', async (req, res, next) => {
       console.log(error);
       return res.status(500).json({ message: 'Ir notikusi kļūda, lūdzu sazinieties ar sistēmas administratoru', successful: false });
   }
+});
+
+loginRouter.post('/validateSession', async (req, res) => {
+  if (req.session.user && req.body.sessionID) {
+      console.log(req.session.user, req.body.sessionID)
+      return res.status(200).json({ name: req.session.user.name, surname: req.session.user.surname, authenticated: req.session.user.authenticated });
+  } else {
+      return res.status(401).json({ message: 'Not authenticated', authenticated: false });
+  } 
 });
 
 module.exports = loginRouter;

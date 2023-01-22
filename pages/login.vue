@@ -91,10 +91,9 @@ export default {
           this.showSnackbar('green', `Autentifikācija veiksmīga - Lietotājs ${name} ${surname}`)
           this.$store.commit('SET_AUTHENTICATED', true)
           this.$store.commit('SET_USER', { name, surname })
-          console.log(this.$store.state.authenticated, this.$store.state.user.name, this.$store.state.user.surname)
-          console.log(response.data.jwt_token)
-          Cookies.set('token', response.data.jwt_token, { expires: 1 })
-          sessionStorage.setItem('token', response.data.jwt_token)
+          Cookies.set('sessionID', response.data.sessionid, { expires: 1 })
+          sessionStorage.setItem('sessionID', response.data.sessionid)
+          console.log(response.data.sessionid, ' + ', response.data.sessionshit)
           setTimeout(() => {
             this.$router.push({ path: '/' });
           }, 3000);

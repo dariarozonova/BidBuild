@@ -61,7 +61,13 @@
 </template>
 
 <script>
+const cookies = require('js-cookie');
+
 export default {
+  mounted() {
+    this.validateSession();
+  },
+
   computed: {
     authenticated() {
       return this.$store.state.authenticated;
@@ -72,6 +78,28 @@ export default {
     surname() {
       return this.$store.state.authenticated ? this.$store.state.user.surname : '';
     }
-  }
+  },
+
+  methods: {
+    async validateSession() {
+        try {
+          const sessionId = cookies.get('sessionID');
+          console.log(sessionId)
+          const response = await this.$axios.post('/api/login/validateSession', {sessionID: sessionId} );
+          if (response.status === 200) {
+              console.log('Success! response from validate session -- ', response.data.name, response.data.surname, response.data.authenticated)
+              this.$store.commit('SET_AUTHENTICATED', true);
+              this.$store.commit('SET_USER', { name: response.data.name, surname: response.data.surname });
+          } else {
+            console.log('cunt.. response from validate session -- ', response.data.name, response.data.surname, response.data.authenticated)
+              this.$store.commit('SET_AUTHENTICATED', false);
+              this.$store.commit('SET_USER', { name: '', surname: '' });
+          }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+  
 }
 </script>
