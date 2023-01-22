@@ -49,15 +49,14 @@ loginRouter.post('/', async (req, res, next) => {
       return res.status(401).json({ message: 'Nepareizs E-Pasts vai parole', successful: false });
     }
 
-    req.session.user = { name: emailCheck.name, surname: emailCheck.surname, authenticated: true }
+    req.session.user = { name: emailCheck.name, surname: emailCheck.surname, email: req.body.email, authenticated: true }
 
     const sessionId = req.sessionID
 
-    req.session.save();
+    req.session.save(() => {})
 
-    
 
-    console.log(req.session.user, sessionId)
+    console.log("Backend /api/login route req.session.user content - ", req.session.user, "\nBackend /api/login route req.session content - ", req.session, '\nSession ID - ', sessionId)
 
     return res.status(200).json({ sessionshit: req.session.user, sessionid: sessionId, message: 'Autentifikācija veiksmīga', successful: true, data: {name: emailCheck.name, surname: emailCheck.surname} });
 
@@ -69,7 +68,18 @@ loginRouter.post('/', async (req, res, next) => {
   }
 });
 
+loginRouter.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: false // set to true if HTTPS
+  }
+}));
+
 loginRouter.post('/validateSession', async (req, res) => {
+  console.log('Backend /api/login/validateSession route, req.session.user content - ', req.session.user, "\nBackend /api/login/validateSession route req.session content - ", req.session,'\nreq.body.sessionID content - ', req.body.sessionID)
   if (req.session.user && req.body.sessionID) {
       console.log(req.session.user, req.body.sessionID)
       return res.status(200).json({ name: req.session.user.name, surname: req.session.user.surname, authenticated: req.session.user.authenticated });
