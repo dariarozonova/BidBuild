@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="everything">
   <Nav />
   <v-container fluid class="profile">
         <v-layout justify-center>
@@ -47,6 +47,80 @@
             </v-card>
         </v-layout>
     </v-container>
+    <v-container>
+        <v-card>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        <v-row>
+            <v-col col-12>
+                <v-card>
+                    <v-card-title>Hello, world!</v-card-title>
+                </v-card>
+            </v-col> 
+        </v-row>
+        </v-card>
+    </v-container>
   <Footer />
 </div>
 </template>
@@ -70,7 +144,7 @@ export default {
 }
 </script>
 <style>
-.profile {
+.everything {
   background: url('static/wall.jpg');
   background-size: cover;
   max-width: 100%;

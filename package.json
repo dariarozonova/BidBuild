@@ -5,18 +5,19 @@
   "scripts": {
     "dev": "concurrently \"NODE_OPTIONS=--openssl-legacy-provider nuxt\" \"node ./api/server.js\"",
     "devnuxt": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt",
-    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt start",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider && nuxt start",
     "generate": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt generate",
-    "server": "node server.js"
+    "server": "nodemon ./api/v2/server.js"
   },
   "dependencies": {
     "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
-    "@prisma/client": "^4.7.1",
+    "@prisma/client": "^4.14.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
+    "caniuse-lite": "^1.0.30001482",
     "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.25.3",
@@ -28,6 +29,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.0.1",
+    "nodemailer": "^6.9.1",
     "nuxt": "^2.15.8",
     "passport": "^0.6.0",
     "sequelize": "^6.28.0",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.12.3",
-    "prisma": "^4.7.1"
+    "prettier": "2.8.8",
+    "prisma": "^4.14.0"
   }
 }

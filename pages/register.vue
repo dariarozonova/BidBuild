@@ -92,14 +92,14 @@
                 :disabled="!isFormValid"
                 color="indigo"
                 >
-                Reģistreties
+                Reģistrēties
               </v-btn>
               <v-btn
                 @click="routeLogin()"
                 outlined
                 color="indigo"
                 >
-                Jau esat izveidojis profilu?
+                Jau izveidoji profilu?
               </v-btn>
             </v-card-actions>
             </v-layout>
@@ -154,6 +154,7 @@ export default {
 
     async submitForm() {
       console.log("clicked!")
+      
       const formData = {
         name: this.name,
         surname: this.surname,
@@ -162,9 +163,10 @@ export default {
         role: this.role,
         password: this.password
       }
+      console.log(formData)
       try {
 
-        const response = await this.$axios.post('/api/register', formData)
+        const response = await this.$axios.post('/api/v2/lietotaji/', formData)
 
         if(response.data.emailTaken){
           this.showSnackbar('red', response.data.message)
@@ -175,9 +177,9 @@ export default {
           }, 3000);
 
         } else if (response.status === 409) {
-          this.showSnackbar('red', 'This email is already registered')
+          this.showSnackbar('red', 'Šis E-Pasts jau ir reģistrēts')
         } else {
-          this.showSnackbar('red', 'An error occurred')
+          this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
         }
       } catch (error) {
         console.log(error)

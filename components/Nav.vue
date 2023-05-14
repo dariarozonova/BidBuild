@@ -9,6 +9,12 @@
         <v-toolbar-title @click="$router.push('/')" class="text-md-h5 font-weight-bold curson-pointer indigo--text" >
             BidBuild
         </v-toolbar-title>
+        <v-btn
+          plain
+          disabled
+        >
+          {{ currentPageText }}
+        </v-btn>
         <v-spacer/>
         <template v-if="authenticated">
           <span>{{ name }} {{ surname }}</span>
@@ -46,16 +52,18 @@
       <v-btn
         outlined
         color="indigo"
-        small>
-          <NuxtLink to="/pakalpojumi" target="_blank">
-              Sludinājumi
-          </NuxtLink>
+        small
+      >
+        <NuxtLink to="/sludinajumi" target="_blank">
+          Sludinājumi
+        </NuxtLink>
         <v-icon
-        right
-        dark>
-        mdi-shopping-search-outline
+          right
+          dark
+        >
+          mdi-shopping-search-outline
         </v-icon>
-        </v-btn>
+      </v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -77,14 +85,27 @@ export default {
     },
     surname() {
       return this.$store.state.authenticated ? this.$store.state.user.surname : '';
-    }
+    },
+    currentPageText() {
+      switch (this.$route.path) {
+        case '/':
+          return 'Home';
+        case '/sludinajumi':
+          return 'Sludinājumi';
+        case '/contact':
+          return 'Contact Us';
+        case '/profile':
+          return 'Mans Profils';
+        default:
+          return '';
+      }
+    },
   },
 
   methods: {
     async validateSession() {
         try {
           const sessionId = cookies.get('sessionID');
-          console.log(sessionId)
           const response = await this.$axios.post('/api/login/validateSession', {sessionID: sessionId} );
           if (response.status === 200) {
               console.log('Success! response from validate session -- ', response.data.name, response.data.surname, response.data.authenticated)
@@ -98,7 +119,9 @@ export default {
         } catch (error) {
             console.log(error);
         }
-    }
+  }
+
+  
 }
   
 }

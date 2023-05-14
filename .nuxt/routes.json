@@ -1,0 +1,44 @@
+[
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/login.vue",
+    "chunkName": "pages/login",
+    "_name": "_ea014eea"
+  },
+  {
+    "name": "profile",
+    "path": "/profile",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/profile.vue",
+    "chunkName": "pages/profile",
+    "_name": "_788f8f6a"
+  },
+  {
+    "name": "register",
+    "path": "/register",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/register.vue",
+    "chunkName": "pages/register",
+    "_name": "_0731f071"
+  },
+  {
+    "name": "sludinajumi",
+    "path": "/sludinajumi",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/sludinajumi.vue",
+    "chunkName": "pages/sludinajumi",
+    "_name": "_391536fd"
+  },
+  {
+    "name": "sludinajums",
+    "path": "/sludinajums",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/sludinajums.vue",
+    "chunkName": "pages/sludinajums",
+    "_name": "_39a22207"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/darjarozonova/Desktop/KvalifikacijasDarbs/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_7d509518"
+  }
+]
