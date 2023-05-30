@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Atsauksme {
+  ID             Int         @id @default(autoincrement())
+  Klients_id     Int
+  Atsauksme      String?     @db.Text
+  Pakalpojums_id Int
+  Datums         DateTime    @db.Timestamp(0)
+  Klients        Klients     @relation(fields: [Klients_id], references: [KlientsID], onDelete: NoAction, onUpdate: NoAction, map: "Atsauksme_ibfk_1")
+  Pakalpojums    Pakalpojums @relation(fields: [Pakalpojums_id], references: [PakalpojumsID], onDelete: Cascade, onUpdate: Restrict, map: "Atsauksme_ibfk_2")
+
+  @@index([Klients_id], map: "Klients_id")
+  @@index([Pakalpojums_id], map: "Pakalpojums_id")
+}
+
+model Grafiks {
+  GrafiksID      Int              @id @default(autoincrement())
+  Datums         DateTime         @db.Date
+  Statuss        Grafiks_Statuss?
+  Pakalpojums_id Int
+  Pakalpojums    Pakalpojums      @relation(fields: [Pakalpojums_id], references: [PakalpojumsID], onDelete: Cascade, onUpdate: Restrict, map: "Grafiks_ibfk_2")
+  Rezervacija    Rezervacija[]
+
+  @@index([Pakalpojums_id], map: "Pakalpojums_id")
+}
+
+model Klients {
+  KlientsID                        Int           @id @default(autoincrement())
+  Vards                            String        @db.VarChar(20)
+  Uzvards                          String        @db.VarChar(20)
+  Talr_nr                          String?       @db.VarChar(12)
+  Epasts                           String        @unique(map: "Epasts") @db.VarChar(255)
+  Parole                           String        @db.VarChar(255)
+  Pilseta                          String?       @db.VarChar(255)
+  Atsauksme                        Atsauksme[]
+  Pilseta_Klients_PilsetaToPilseta Pilseta?      @relation("Klients_PilsetaToPilseta", fields: [Pilseta], references: [Pilsetas_nosaukums], onDelete: NoAction, onUpdate: NoAction, map: "Klients_ibfk_1")
+  Rezervacija                      Rezervacija[]
+
+  @@index([Pilseta], map: "Pilseta")
+}
+
+model Pakalpojums {
+  PakalpojumsID                                    Int         @id @default(autoincrement())
+  Piegadatajs                                      Int
+  Pakalpojuma_nosaukums                            String?     @db.Text
+  Pakalpojuma_apraksts                             String?     @db.Text
+  Sfera                                            Int
+  Cena                                             Float
+  Ievietosanas_datums                              DateTime    @default(now()) @db.DateTime(0)
+  Skatijumi                                        Int         @default(0)
+  Atsauksme                                        Atsauksme[]
+  Grafiks                                          Grafiks[]
+  Sfera_Pakalpojums_SferaToSfera                   Sfera       @relation("Pakalpojums_SferaToSfera", fields: [Sfera], references: [SferaID], onDelete: Cascade, onUpdate: Restrict, map: "Pakalpojums_ibfk_1")
+  Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs Piegadatajs @relation("Pakalpojums_PiegadatajsToPiegadatajs", fields: [Piegadatajs], references: [PiegadatajsID], onDelete: Cascade, onUpdate: Restrict, map: "Pakalpojums_ibfk_2")
+
+  @@index([Piegadatajs], map: "Piegadatajs")
+  @@index([Sfera], map: "Sfera")
+}
+
+model Piegadatajs {
+  PiegadatajsID                                    Int           @id @default(autoincrement())
+  Vards                                            String        @db.VarChar(255)
+  Uzvards                                          String        @db.VarChar(255)
+  Talr_nr                                          String?       @db.VarChar(12)
+  Epasts                                           String        @unique(map: "Epasts") @db.VarChar(255)
+  Pieredze                                         Int?
+  Parole                                           String        @db.VarChar(255)
+  Pilseta                                          String?       @db.VarChar(255)
+  Pakalpojums_Pakalpojums_PiegadatajsToPiegadatajs Pakalpojums[] @relation("Pakalpojums_PiegadatajsToPiegadatajs")
+  Pilseta_Piegadatajs_PilsetaToPilseta             Pilseta?      @relation("Piegadatajs_PilsetaToPilseta", fields: [Pilseta], references: [Pilsetas_nosaukums], onDelete: NoAction, onUpdate: NoAction, map: "Piegadatajs_ibfk_1")
+
+  @@index([Pilseta], map: "Pilseta")
+}
+
+model Pilseta {
+  Pilsetas_nosaukums                       String        @id @db.VarChar(255)
+  Novada_nosaukums                         String?       @db.Text
+  Klients_Klients_PilsetaToPilseta         Klients[]     @relation("Klients_PilsetaToPilseta")
+  Piegadatajs_Piegadatajs_PilsetaToPilseta Piegadatajs[] @relation("Piegadatajs_PilsetaToPilseta")
+}
+
+model Rezervacija {
+  RezervacijaID Int                  @id @default(autoincrement())
+  Grafiks_id    Int
+  Datums        DateTime?            @db.Date
+  Statuss       Rezervacija_Statuss?
+  Klients_id    Int
+  Grafiks       Grafiks              @relation(fields: [Grafiks_id], references: [GrafiksID], onDelete: Cascade, onUpdate: Restrict, map: "Rezervacija_ibfk_1")
+  Klients       Klients              @relation(fields: [Klients_id], references: [KlientsID], onDelete: Cascade, onUpdate: Restrict, map: "Rezervacija_ibfk_2")
+
+  @@index([Grafiks_id], map: "Grafiks_id")
+  @@index([Klients_id], map: "Klients_id")
+}
+
+model Sfera {
+  SferaID                              Int           @id
+  Sferas_nosaukums                     String?       @db.Text
+  Pakalpojums_Pakalpojums_SferaToSfera Pakalpojums[] @relation("Pakalpojums_SferaToSfera")
+}
+
+enum Grafiks_Statuss {
+  Aiz_emts @map("Aizņemts")
+  Br_vs    @map("Brīvs")
+}
+
+enum Rezervacija_Statuss {
+  Izpild_ts @map("Izpildīts")
+  Atcelts
+  Proces_   @map("Procesā")
+}

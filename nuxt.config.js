@@ -35,13 +35,44 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
+  ],
+  
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true,
+          required: true,
+          type: 'Bearer',
+        },
+        user: {
+          property: false,
+          autoFetch: true,
+        },
+        endpoints: {
+          login: { url: '/api/v2/auth/login', method: 'post' },
+          logout: false,
+          user: { url: '/api/v2/auth/', method: 'get' },
+        },
+      },
+    },
+  },
+
   axios:{
-    baseURL: 'http://localhost:3001'
+    baseURL: 'http://192.168.0.152:8080'
+  },
+
+  server: {
+    host: "0.0.0.0"
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -57,7 +88,8 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
+          success: colors.green.accent3,
+          indigo: "#4B0082"
         }
       }
     }

@@ -58,9 +58,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
-
 export default {
+  middleware: 'redirectAuth',
   data() {
     return {
       email: '',
@@ -78,34 +77,20 @@ export default {
 
     async submitForm() {
       console.log("clicked!")
-      const formData = {
-        email: this.email,
-        password: this.password
-      }
       try {
-
-        const response = await this.$axios.post('/api/login', formData)
-
-        if (response.status === 200) {
-          const { name, surname } = response.data.data;
-          this.showSnackbar('green', `Autentifikācija veiksmīga - Lietotājs ${name} ${surname}`)
-          this.$store.commit('SET_AUTHENTICATED', true)
-          this.$store.commit('SET_USER', { name, surname })
-          Cookies.set('sessionID', response.data.sessionid, { expires: 1 })
-          sessionStorage.setItem('sessionID', response.data.sessionid)
-          console.log(response.data.sessionid, ' + ', response.data.sessionshit)
-          setTimeout(() => {
-            this.$router.push({ path: '/' });
-          }, 3000);
-
-        } else {
-          this.showSnackbar('red', 'An error occurred')
+        const formData = {
+          email: this.email,
+          password: this.password
         }
 
-        if(response.status === 401) {
-          this.showSnackbar('red', response.data.message)
-          return;
-        }
+        console.log(formData)
+        let response = await this.$auth.loginWith('local', {
+          data: formData,
+        })
+
+        console.log(response)
+
+        this.$router.push('/')
 
       } catch (error) {
         if(error.response){

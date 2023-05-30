@@ -4,9 +4,9 @@
       <v-row justify="center">
         <v-col cols="10">
           <h1>Kļūda!</h1>
-          <p>Notika kaut kas nepareizs :)</p>
+          <p>Kaut kas nogāja greizi :/</p>
           <p class="red--text">Error : {{error.message}}</p>
-          <v-btn nuxt to="/" color="primary" class=text-capitalize>Atpakaļ</v-btn>
+          <v-btn nuxt to="/" color="primary" class=text-capitalize>Atgriezties uz sākuma lapu</v-btn>
         </v-col>
       </v-row>
     </v-container>>

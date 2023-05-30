@@ -17,7 +17,8 @@
 
       <v-card
       class="mt-13 mx-auto"
-      max-width="500">
+      max-width="500"
+      :style="{ bottom: '20px'}">
       <v-card-title class="text-h6 justify-center font-weight-regular">
       <span>Reģistrācija</span>
       </v-card-title>
@@ -91,27 +92,29 @@
                 :disabled="!isFormValid"
                 color="indigo"
                 >
-                Reģistreties
+                Reģistrēties
               </v-btn>
               <v-btn
                 @click="routeLogin()"
                 outlined
                 color="indigo"
                 >
-                Jau esat izveidojis profilu?
+                Jau izveidoji profilu?
               </v-btn>
             </v-card-actions>
             </v-layout>
         </v-window-item>
       </v-window>
-      <v-divider></v-divider>
       </v-card>
+      <v-divider></v-divider>
+      <v-divider></v-divider>
     <Footer />
   </div>
 </template>
 
 <script>
 export default {
+  middleware: 'redirectAuth',
   data() {
     return {
       name: '',
@@ -130,7 +133,7 @@ export default {
       surnameRules: [v => !!v || 'Šis lauks ir nepieciešams'],
       numberRules: [v => !!v || 'Šis lauks ir nepieciešams', v => /^\+371[0-9]{8}$/.test(v) || 'Telefona numuram jāsākas ar +371 un jābūt 8 cipariem'],
       roleRules: [v => !!v || 'Šis lauks ir nepieciešams'],
-      passwordRules: [v => !!v || "Password is required", v => (v && v.length >= 8) || "Password must be at least 8 characters"],
+      passwordRules: [v => !!v || "Parole ir nepieciešama", v => (v && v.length >= 8) || "Parolei jāsatur vismaz 8 rakstzīmes"],
       confirmPasswordRules: [v => !!v || "Šis lauks ir nepieciešams"],
       responseData: '',
       snackbar: false,
@@ -152,6 +155,7 @@ export default {
 
     async submitForm() {
       console.log("clicked!")
+      
       const formData = {
         name: this.name,
         surname: this.surname,
@@ -160,9 +164,10 @@ export default {
         role: this.role,
         password: this.password
       }
+      console.log(formData)
       try {
 
-        const response = await this.$axios.post('/api/register', formData)
+        const response = await this.$axios.post('/api/v2/auth/register', formData)
 
         if(response.data.emailTaken){
           this.showSnackbar('red', response.data.message)
@@ -173,9 +178,9 @@ export default {
           }, 3000);
 
         } else if (response.status === 409) {
-          this.showSnackbar('red', 'This email is already registered')
+          this.showSnackbar('red', 'Šis E-Pasts jau ir reģistrēts')
         } else {
-          this.showSnackbar('red', 'An error occurred')
+          this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
         }
       } catch (error) {
         console.log(error)

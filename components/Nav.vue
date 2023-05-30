@@ -6,12 +6,18 @@
       light
     >   
     <v-divider vertical class="mx-md-3 mx-2 transparent"/>
-        <v-toolbar-title @click="$router.push('/')" class="text-md-h5 font-weight-bold curson-pointer indigo--text" >
+        <v-toolbar-title style='cursor: pointer;' @click="$router.push('/')" class="text-md-h5 font-weight-bold curson-pointer indigo--text" >
             BidBuild
         </v-toolbar-title>
+        <v-btn
+          plain
+          disabled
+        >
+          {{ currentPageText }}
+        </v-btn>
         <v-spacer/>
-        <template v-if="authenticated">
-          <span>{{ name }} {{ surname }}</span>
+        <template v-if="isAuthenticated">
+          <span @click="goToProfile">{{ name }} {{ surname }}</span>
         </template>
         <template v-else>
           <v-btn
@@ -46,60 +52,56 @@
       <v-btn
         outlined
         color="indigo"
-        small>
-          <NuxtLink to="/pakalpojumi" target="_blank">
-              Sludinājumi
-          </NuxtLink>
+        small
+      >
+        <NuxtLink to="/sludinajumi" target="_blank">
+          Sludinājumi
+        </NuxtLink>
         <v-icon
-        right
-        dark>
-        mdi-shopping-search-outline
+          right
+          dark
+        >
+          mdi-shopping-search-outline
         </v-icon>
-        </v-btn>
+      </v-btn>
     </v-app-bar>
   </div>
 </template>
 
 <script>
-const cookies = require('js-cookie');
-
 export default {
-  mounted() {
-    this.validateSession();
-  },
 
   computed: {
-    authenticated() {
-      return this.$store.state.authenticated;
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated;
     },
     name() {
-      return this.$store.state.authenticated ? this.$store.state.user.name : '';
+      return this.$store.getters.isAuthenticated ? this.$store.getters.getUserInfo.Vards : '';
     },
     surname() {
-      return this.$store.state.authenticated ? this.$store.state.user.surname : '';
-    }
+      return this.$store.getters.isAuthenticated ? this.$store.getters.getUserInfo.Uzvards : '';
+    },
+    currentPageText() {
+      switch (this.$route.path) {
+        case '/':
+          return 'Home';
+        case '/sludinajumi':
+          return 'Sludinājumi';
+        case '/contact':
+          return 'Contact Us';
+        case '/profile':
+          return 'Mans Profils';
+        default:
+          return '';
+      }
+    },
   },
 
   methods: {
-    async validateSession() {
-        try {
-          const sessionId = cookies.get('sessionID');
-          console.log(sessionId)
-          const response = await this.$axios.post('/api/login/validateSession', {sessionID: sessionId} );
-          if (response.status === 200) {
-              console.log('Success! response from validate session -- ', response.data.name, response.data.surname, response.data.authenticated)
-              this.$store.commit('SET_AUTHENTICATED', true);
-              this.$store.commit('SET_USER', { name: response.data.name, surname: response.data.surname });
-          } else {
-            console.log('cunt.. response from validate session -- ', response.data.name, response.data.surname, response.data.authenticated)
-              this.$store.commit('SET_AUTHENTICATED', false);
-              this.$store.commit('SET_USER', { name: '', surname: '' });
-          }
-        } catch (error) {
-            console.log(error);
-        }
+    goToProfile(){
+      this.$router.push('/profile')
     }
-}
+  },
   
 }
 </script>
