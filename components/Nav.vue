@@ -49,21 +49,49 @@
             </v-btn>
         </template>
         <v-divider vertical class="mx-md-5 mx-2 transparent"/>
-      <v-btn
-        outlined
-        color="indigo"
-        small
-      >
-        <NuxtLink to="/sludinajumi" target="_blank">
-          Sludinājumi
-        </NuxtLink>
-        <v-icon
-          right
-          dark
-        >
-          mdi-shopping-search-outline
-        </v-icon>
-      </v-btn>
+          <v-btn
+            outlined
+            color="indigo"
+            small
+          >
+            <NuxtLink to="/sludinajumi" target="_blank">
+              Sludinājumi
+            </NuxtLink>
+            <v-icon
+              right
+              dark
+            >
+              mdi-shopping-search-outline
+            </v-icon>
+          </v-btn>
+          <v-divider vertical class="mx-md-5 mx-2 transparent"/>
+          <v-btn
+              outlined
+              color="indigo"
+              small>
+                <NuxtLink to="/contact" replace>
+                    Palīdzība
+                </NuxtLink>
+              <v-icon
+              right
+              dark>
+              mdi-chat-question-outline
+              </v-icon>
+            </v-btn>
+            <v-divider vertical class="mx-md-5 mx-2 transparent"/>
+            <v-btn 
+              v-if="isAuthenticated"
+              outlined
+              color="indigo"
+              small
+              @click="logout">
+                  Izlogoties
+              <v-icon
+              right
+              dark>
+              mdi-logout
+              </v-icon>
+            </v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -98,9 +126,16 @@ export default {
   },
 
   methods: {
+
     goToProfile(){
       this.$router.push('/profile')
+    },
+
+    logout(){
+      this.$router.push('/')
+      this.$auth.logout()
     }
+    
   },
   
 }

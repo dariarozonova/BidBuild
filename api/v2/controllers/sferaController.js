@@ -20,7 +20,7 @@ exports.getSferas = async (req, res) => {
         res.status(200).send(sferas);
       }
     } catch (error) {
-        res.status(500).send('Server Error: ' + error.message);
+        res.status(500).send({ message: "Notika kļūda."});
     }
   };
   

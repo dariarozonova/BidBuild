@@ -8,6 +8,7 @@ router.get('/id/:id', pakalpojumsController.getPakalpojumsById);
 router.get('/email/:email', pakalpojumsController.getPakalpojumsByEmail);
 router.get('/sfera/:id', pakalpojumsController.getPakalpojumsBySfera);
 router.post('/', isUserAuthenticated, pakalpojumsController.createPakalpojums);
+router.post('/addView', pakalpojumsController.addView);
 router.delete('/:id', isUserAuthenticated, pakalpojumsController.deletePakalpojumsById);
 
 

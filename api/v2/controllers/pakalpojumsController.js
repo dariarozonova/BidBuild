@@ -24,8 +24,8 @@ exports.getAllPakalpojumi = async (req, res) => {
     });
     res.status(200).json(pakalpojumi);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error: ' + error.message);
+    console.log(error.message)
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -80,8 +80,7 @@ exports.getPakalpojumsByEmail = async (req, res) => {
 
     res.status(200).send(pakalpojumi);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error: ' + error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -118,8 +117,7 @@ exports.deletePakalpojumsById = async (req, res) => {
 
     res.status(200).send(deletedPakalpojums);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error: ' + error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -150,10 +148,33 @@ exports.createPakalpojums = async (req, res) => {
 
     res.status(201).send(createdPakalpojums);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error: ' + error.message);
+    res.status(500).json({ message: error.message });
   }
 };
+
+exports.addView = async (req, res) => {
+  try{
+    const { PakalpojumsID } = req.body
+
+
+    const pakalpojums = await prisma.pakalpojums.update({
+      where: {
+        PakalpojumsID: parseInt(PakalpojumsID),
+      },
+      data: {
+        Skatijumi: {
+          increment: 1
+        }
+      }
+    })
+
+    res.status(200).send(pakalpojums);
+
+
+  } catch (error){
+    console.log(error)
+  }
+}
 
 // GET http://localhost:8080/api/v2/pakalpojumi/sfera/:id
 // Izvada visus pakalpojumus ar ievadītās sfēras ID
@@ -180,7 +201,6 @@ exports.getPakalpojumsBySfera = async (req, res) => {
     });
     res.status(200).send(pakalpojumi);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error: ' + error.message);
+    res.status(500).json({ message: error.message });
   }
 };

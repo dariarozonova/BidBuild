@@ -76,7 +76,6 @@ export default {
   methods: {
 
     async submitForm() {
-      console.log("clicked!")
       try {
         const formData = {
           email: this.email,
@@ -87,8 +86,6 @@ export default {
         let response = await this.$auth.loginWith('local', {
           data: formData,
         })
-
-        console.log(response)
 
         this.$router.push('/')
 

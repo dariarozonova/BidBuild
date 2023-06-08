@@ -164,12 +164,11 @@ export default {
         role: this.role,
         password: this.password
       }
-      console.log(formData)
       try {
 
         const response = await this.$axios.post('/api/v2/auth/register', formData)
 
-        if(response.data.emailTaken){
+        if(response.status === 409){
           this.showSnackbar('red', response.data.message)
         } else if (response.status === 200) {
           this.showSnackbar('green', response.data.message)
@@ -183,8 +182,11 @@ export default {
           this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
         }
       } catch (error) {
-        console.log(error)
-        this.showSnackbar('red', error.message)
+        if(error.response){
+          if(error.response.status == 409){
+            this.showSnackbar('red', 'Šis E-Pasts jau ir reģistrēts')
+          }
+        }
       }
     },
 

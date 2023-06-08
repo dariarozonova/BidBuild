@@ -29,8 +29,8 @@
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="openEditDialog">Labot informāciju</v-btn>
-            <v-btn color="primary" @click="openPasswordDialog">Mainīt paroli</v-btn>
+            <v-btn outlined color="indigo" @click="openEditDialog">Labot informāciju</v-btn>
+            <v-btn outlined color="indigo" @click="openPasswordDialog">Mainīt paroli</v-btn>
           </v-card-actions>
         </v-card>
 
@@ -57,8 +57,8 @@
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="success darken-1" @click="saveInfo">Saglabāt</v-btn>
-              <v-btn color="error darken-1" @click="cancelChanges">Atcelt</v-btn>
+              <v-btn outlined color="indigo" @click="saveInfo">Saglabāt</v-btn>
+              <v-btn outlined color="error" @click="cancelChanges">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -93,8 +93,8 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="success darken-1" :disabled="!isPasswordFormValid" @click="savePassword">Saglabāt</v-btn>
-              <v-btn color="error darken-1" @click="cancelChanges">Atcelt</v-btn>
+              <v-btn outlined color="indigo" :disabled="!isPasswordFormValid" @click="savePassword">Saglabāt</v-btn>
+              <v-btn outlined color="error" @click="cancelChanges">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -107,8 +107,8 @@
               Vai tiešām vēlaties dzēst šo Pakalpojumu ?
             </v-card-text>
             <v-card-actions>
-              <v-btn color="success" @click="deletePakalpojumsConfirm">Jā</v-btn>
-              <v-btn color="error darken-1" @click="cancelPakalpojumsDelete">Nē</v-btn>
+              <v-btn outlined color="indigo" @click="deletePakalpojumsConfirm">Jā</v-btn>
+              <v-btn outlined color="error" @click="cancelPakalpojumsDelete">Nē</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -131,15 +131,20 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="savePakalpojums">Saglabāt</v-btn>
-              <v-btn color="error" @click="cancelPakalpojumsEdit">Atcelt</v-btn>
+              <v-btn outlined color="indigo" @click="savePakalpojums">Saglabāt</v-btn>
+              <v-btn outlined color="error" @click="cancelPakalpojumsEdit">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
 
+
         <!-- Attēlo piegādātāja izveidotos pakalpojumus -->
         <v-card class="mt-5" elevation="24" v-if="userInfo.Role == 'Piegadatajs'">
-          <v-card-title>Jūsu ievietotie pakalpojumi</v-card-title>
+          <v-card-title>Jūsu ievietotie pakalpojumi<v-spacer vertical class="mx-5 transparent"></v-spacer><v-btn
+            outlined
+            color="indigo"
+            >
+            Izveidot pakalpojumu </v-btn></v-card-title>
           <v-card-text v-if="Pakalpojumi.length > 0">
             <v-row>
               <v-col v-for="pakalpojums in Pakalpojumi" :key="pakalpojums.PakalpojumsID" cols="12">
@@ -159,8 +164,8 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="primary" @click="editPakalpojums(pakalpojums)">Rediģēt</v-btn>
-                      <v-btn color="error darken-1" @click="deletePakalpojums(pakalpojums)">Izdzēst</v-btn>
+                      <v-btn outlined color="indigo" @click="editPakalpojums(pakalpojums)">Rediģēt</v-btn>
+                      <v-btn outlined color="error" @click="deletePakalpojums(pakalpojums)">Izdzēst</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-sheet>
@@ -174,6 +179,20 @@
                 <v-card>
                   <v-card-title>
                     Jums nav ievietotu pakalpojumu
+                  </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+
+        <v-card class="mt-5" elevation="24" v-if="userInfo.Role == 'Piegadatajs'">
+        <v-card-text>
+            <v-row>
+              <v-col cols="12">
+                <v-card>
+                  <v-card-title>
+                    Jums vēl nav atsauksmes
                   </v-card-title>
                 </v-card>
               </v-col>
@@ -246,6 +265,7 @@
       </v-col>
     </v-row>
   </v-container>
+<Footer />
   </div>
 </template>
 
@@ -290,7 +310,6 @@ export default {
   },
   methods: {
     openEditDialog() {
-      // Initialize the editUserInfo with current user info
       this.editUserInfo = {
         Vards: this.userInfo.Vards,
         Uzvards: this.userInfo.Uzvards,
@@ -313,13 +332,9 @@ export default {
     },
 
     saveInfo() {
-      // Save changes and update user info in Vuex store or submit the form to the server
-      // ...
       this.editDialog = false;
     },
     savePassword() {
-      // Save changes and update user info in Vuex store or submit the form to the server
-      // ...
       this.changePasswordDialog = false;
     },
 

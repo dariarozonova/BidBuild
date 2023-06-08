@@ -68,7 +68,7 @@ export default {
   },
 
   axios:{
-    baseURL: 'http://192.168.0.152:8080'
+    baseURL: 'http://0.0.0.0:8080'
   },
 
   server: {

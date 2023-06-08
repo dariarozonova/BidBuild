@@ -118,17 +118,6 @@ export default {
     }
   },
 
-  computed: {
-    cardRows() {
-      const rows = []
-      const chunkSize = 3
-      for (let i = 0; i < this.cards.length; i += chunkSize) {
-        rows.push(this.cards.slice(i, i + chunkSize))
-      }
-      return rows
-    }
-  },
-
     
 }
 </script>

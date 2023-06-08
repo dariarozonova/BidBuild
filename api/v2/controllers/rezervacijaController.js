@@ -35,8 +35,7 @@ exports.sendEmail = async (req, res) => {
 
 exports.getAllRezervacijas = async (req, res) => {
     try {
-  
-      console.log('i want to kms')
+      console.log("get all rezervacijas")
     } catch (error) {
       console.error(`Error sending email to ${recipient}: ${error}`);
     }
