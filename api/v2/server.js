@@ -35,6 +35,10 @@ app.use('/api/v2/auth', auth)
 
 app.use('/api/v2/sferas', sfera)
 
+app.use('/api/v2/grafiks', grafiks)
+
+app.use('/api/v2/atsauksmes', atsauksmes)
+
 
 
 const PORT = process.env.SERVER_PORT;

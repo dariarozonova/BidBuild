@@ -310,7 +310,6 @@
       </v-col>
     </v-card>
   </v-dialog>
-          {{ Atsauksmes }}
   </v-container>
 <Footer />
   </div>
