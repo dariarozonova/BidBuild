@@ -17,12 +17,12 @@ exports.registerUser = async (req, res) => {
         ) {
             return res.status(400).send({ error: true, message: 'Viens vai vairāki lauciņi nav aizpildīti' })
         }
-  
+
         // Pārbauda vai ievaditais e-pasts ir e-pasts
         if (!validator.isEmail(req.body.email)) {
             return res.status(400).send({ error: true, message: 'Nepareizs E-Pasta formāts' })
         }
-  
+
         // Parbauda, vai e-pasta adrese jau nav reģistrēta
         var user = await prisma.piegadatajs.findFirst({
             where: {
@@ -41,10 +41,10 @@ exports.registerUser = async (req, res) => {
         if (user) {
             return res.status(409).send({ error: true, emailTaken: true, message: 'Lietotājs ar šādu E-Pasta adresi jau eksistē.' })
         }
-  
+
         // Šifrē paroli
         const hash = await bcrypt.hash(req.body.password, 10)
-  
+
 
         if (req.body.role === 'Piegādātājs') {
             await prisma.piegadatajs.create({
@@ -72,7 +72,7 @@ exports.registerUser = async (req, res) => {
         } else {
             return res.status(400).send({ error: true, message: 'Nepareiza loma.' })
         }
-  
+
         return res.send({ error: false, message: 'Lietotāja profils izveidots!' })
     } catch (error) {
         return res.status(500).send({ message: 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.' })
@@ -88,8 +88,8 @@ exports.loginUser = async (req, res) => {
       if (!req.body.email || !req.body.password) {
         return res.status(409).send({ message: 'Viens vai vairāki lauciņi ir tukši.' });
       }
-  
-  
+
+
       // Pārbauda vai lietotājs ir Klients vai Piegādātājs
       const klientsUser = await prisma.klients.findUnique({
         where: {
@@ -103,7 +103,7 @@ exports.loginUser = async (req, res) => {
           Epasts: req.body.email,
         },
       });
-  
+
 
       if (klientsUser) {
         currentUser = klientsUser;
@@ -118,18 +118,18 @@ exports.loginUser = async (req, res) => {
         req.body.password,
         currentUser.Parole
       );
-  
+
       if (!isPasswordValid) {
         return res.status(401).send({ token: null, message: 'Nepareiza parole.' });
       }
-  
+
       // Izveido autentifikācijas atslēgu un aizsūta uz nuxt
       const token = jwt.sign({ email: currentUser.Epasts }, process.env.SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRATION,
       });
-  
+
       res.status(200).json({ token: token });
-  
+
     } catch (error) {
       console.log(error);
     }
@@ -141,24 +141,31 @@ exports.getLoggedInUser = async (req, res) => {
     }
     try {
       let userType;
-  
+
       // Nosaka, vai ielogotais lietotājs ir klients vai piegādātājs
       if (currentUser.hasOwnProperty('KlientsID')) {
         userType = 'Klients';
+        res.status(200).json({
+          Vards: currentUser.Vards,
+          Uzvards: currentUser.Uzvards,
+          Epasts: currentUser.Epasts,
+          Numurs: currentUser.Talr_nr,
+          Pilseta: currentUser.Pilseta,
+          Role: userType,
+          ID: currentUser.KlientsID
+        });
       } else if (currentUser.hasOwnProperty('PiegadatajsID')) {
         userType = 'Piegadatajs';
+        res.status(200).json({
+          Vards: currentUser.Vards,
+          Uzvards: currentUser.Uzvards,
+          Epasts: currentUser.Epasts,
+          Numurs: currentUser.Talr_nr,
+          Pilseta: currentUser.Pilseta,
+          Role: userType,
+          ID: currentUser.PiegadatajsID
+        });
       }
-
-
-      // Aizsūta ielogotā lietotāja datus uz nuxt
-      res.status(200).json({
-        Vards: currentUser.Vards,
-        Uzvards: currentUser.Uzvards,
-        Epasts: currentUser.Epasts,
-        Numurs: currentUser.Talr_nr,
-        Pilseta: currentUser.Pilseta,
-        Role: userType,
-      });
 
     } catch (error) {
       console.log(error);

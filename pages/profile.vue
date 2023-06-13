@@ -79,15 +79,15 @@
                 <v-text-field
                   label="Jūsu jaunā parole"
                   :rules="passwordRules"
-                  input type="password" 
-                  v-model="newPassword" 
+                  input type="password"
+                  v-model="newPassword"
                   required
                 ></v-text-field>
                 <v-text-field
                   label="Apstiprināt jauno paroli"
                   :rules="confirmPasswordRules"
-                  input type="password" 
-                  v-model="confirmNewPassword" 
+                  input type="password"
+                  v-model="confirmNewPassword"
                   required
                 ></v-text-field>
               </v-form>
@@ -113,7 +113,7 @@
           </v-card>
         </v-dialog>
 
-        <!-- Pakalpojuma rediģēšanas dialogs -->
+            <!-- Pakalpojuma rediģēšanas dialogs -->
         <v-dialog v-model="showEditPakalpojumsDialog" max-width="500px">
           <v-card>
             <v-card-title class="headline">Rediģēt pakalpojumu</v-card-title>
@@ -186,8 +186,34 @@
           </v-card-text>
         </v-card>
 
+       <!-- Attēlo atsauskmes -->
         <v-card class="mt-5" elevation="24" v-if="userInfo.Role == 'Piegadatajs'">
-        <v-card-text>
+          <v-card-title>Atsauksmes<v-spacer vertical class="mx-5 transparent"></v-spacer>
+          <v-btn
+            outlined
+            color="indigo"
+            @click="addAtsauksme"
+            v-if="userInfo.Role == 'Piegadatajs'"
+            >
+            Pievienot atsauksmi </v-btn></v-card-title>
+          <v-card-text v-if="Atsauksmes.length > 0">
+            <v-row>
+              <v-col v-for="atsauksme in Atsauksmes" :key="atsauksme.ID" cols="12">
+                <v-card>
+                    <v-card-title>
+                      {{ atsauksme.Atsauksme }}
+                    </v-card-title>
+                    <v-card-text>
+                      <strong>Pakalpojums: </strong>{{ atsauksme.Pakalpojums.Pakalpojuma_nosaukums }}
+                    </v-card-text>
+                    <v-card-text>
+                      Atsauksme ievietota: {{ datetolocal(atsauksme.Datums) }}
+                    </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        <v-card-text v-else>
             <v-row>
               <v-col cols="12">
                 <v-card>
@@ -197,10 +223,8 @@
                 </v-card>
               </v-col>
             </v-row>
-          </v-card-text>
+        </v-card-text>
         </v-card>
-
-        
 
         <!-- Attēlo klienta rezervētos pakalpojumus -->
         <v-card class="mt-5" elevation="24" v-else-if="userInfo.Role == 'Klients'">
@@ -224,6 +248,7 @@
               </v-col>
             </v-row>
           </v-card-text>
+
           <v-card-text class="mt-5" elevation="24" v-else>
             <v-row>
               <v-col cols="12">
@@ -236,7 +261,7 @@
             </v-row>
           </v-card-text>
         </v-card>
-        
+
 
         <!-- Attēlo "Nav Satura", šim nevajadzētu notikt :))-->
         <v-card class="mt-5" elevation="24" v-else>
@@ -264,6 +289,33 @@
 
       </v-col>
     </v-row>
+    <v-dialog v-model="showAddAtsausksmeDialog" max-width="500px">
+    <v-card class="mt-5" elevation="24">
+      <v-col cols="12">
+        <v-card-title class="headline">Pievienot atsauksmi</v-card-title>
+        <v-card-text>
+          <v-textarea counter="300" v-model="Atsauksme" :rules="commentRules" ref="atsauksmesText" label="Jūsu atsauksme"></v-textarea>
+        </v-card-text>
+        <v-select
+          v-model="selectedPakalpojums"
+          :items="pakalpojumsOptions"
+          :rules="pakRules"
+          label="Izvēlaties pakalpojumu"
+          ref="atsauksmesSelect"
+          item-text="Pakalpojuma_nosaukums"
+          item-value="id"
+          required
+        >
+        </v-select>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn outlined color="indigo" @click="savePakalpojums">Pievienot</v-btn>
+          <v-btn outlined color="error" @click="cancelAtsauksme">Atcelt</v-btn>
+        </v-card-actions>
+      </v-col>
+    </v-card>
+  </v-dialog>
+          {{ Atsauksmes }}
   </v-container>
 <Footer />
   </div>
@@ -280,6 +332,7 @@ export default {
       showPakalpojumsConfirmationDialog: false,
       showEditPakalpojumsDialog: false,
       isPasswordFormValid: false,
+      showAddAtsausksmeDialog: false,
       isInfoFormValid: false,
       editUserInfo: {
         Vards: '',
@@ -290,9 +343,14 @@ export default {
       Pakalpojumi: [],
       Rezervacijas: [],
       Sferas: [],
-      selectedPakalpojums: null,
+      Atsauksmes: [],
+      pakalpojumsOptions: [],
       selectedRezervacija: null,
-
+      options: [
+        '',
+      ],
+      Atsauksme: '',
+      selectedPakalpojums: null,
       currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -301,6 +359,8 @@ export default {
         v => !!v || "Šis lauks ir nepieciešams",
         this.matchingPasswords
       ],
+      pakRules: [v => !!v || 'Šis lauks ir nepieciešams'],
+      commentRules: [v => !!v || 'Šis lauks ir nepieciešams'],
     };
   },
   computed: {
@@ -360,6 +420,51 @@ export default {
       this.showPakalpojumsConfirmationDialog = true;
     },
 
+    async getAtsauksmes(){
+      try {
+        const response = await this.$axios.get(`/api/v2/atsauksmes/id/${this.userInfo.ID}`);
+        this.Atsauksmes = response.data;
+        console.log(response.data)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    datetolocal(date){
+        const newDate = new Date(date)
+        return newDate.toLocaleString()
+      },
+
+    addAtsauksme() {
+        this.showAddAtsausksmeDialog = true;
+      },
+
+    resetAtsauksme() {
+      console.log('Atjaunošana');
+      this.Atsauksme = '';
+      this.selectedAdvertisement = null;
+    },
+
+    resetValidation() {
+      this.$refs.atsauksmesText.resetValidation();
+      this.$refs.atsauksmesSelect.resetValidation();
+    },
+
+    cancelAtsauksme() {
+      this.resetValidation();
+      this.resetAtsauksme();
+
+      // Reset the values of the form fields
+      this.$refs.atsauksmesText.$el.value = '';
+      this.$refs.atsauksmesSelect.$el.value = null;
+
+      this.showAddAtsausksmeDialog = false;
+    },
+
+    saveAtsauksme() {
+      console.log("saved")
+      },
+
     async editPakalpojums(pakalpojums){
       if(this.Sferas.length === 0){
         try {
@@ -391,7 +496,7 @@ export default {
       } catch (error){
         console.log(error)
       }
-      
+
     },
 
     cancelPakalpojumsDelete() {
@@ -403,6 +508,7 @@ export default {
       try {
         const response = await this.$axios.$get(`/api/v2/pakalpojumi/email/${this.userInfo.Epasts}`);
         this.Pakalpojumi = response;
+        this.pakalpojumsOptions = response;
       } catch (error) {
         console.error(error);
       }
@@ -413,7 +519,9 @@ export default {
     }
 
   },
+
   created() {
+    this.getAtsauksmes();
     this.updateUserData();
     if(this.userInfo.Role == "Piegadatajs"){
       this.getPakalpojumi();

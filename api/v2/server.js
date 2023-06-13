@@ -21,6 +21,8 @@ const auth = require('./routers/authRouter')
 
 const sfera = require('./routers/sferaRouter')
 
+const atsauksmes = require('./routers/atsauksmeRouter')
+
 app.use('/api/v2/pakalpojumi', pakalpojumi)
 
 app.use('/api/v2/rezervacijas', rezervacijas)
@@ -30,6 +32,8 @@ app.use('/api/v2/lietotaji', lietotaji);
 app.use('/api/v2/auth', auth)
 
 app.use('/api/v2/sferas', sfera)
+
+app.use('/api/v2/atsauksmes', atsauksmes)
 
 
 

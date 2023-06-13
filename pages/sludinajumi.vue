@@ -123,6 +123,7 @@ export default {
         snackbar: false,
         newDate: null,
         showAddPakalpojumsDialog: false,
+        showAddPakalpojumsDialog: false,
         headers: [
           {
             text: 'Sludinājumi',
@@ -150,6 +151,11 @@ export default {
         this.snackbarColor = color
         this.snackbar = true
       },
+
+      cancelPakalpojumsEdit(){
+      this.selectedPakalpojums = null;
+      this.showAddPakalpojumsDialog = false;
+    },
 
       datetolocal(date){
         const newDate = new Date(date)
