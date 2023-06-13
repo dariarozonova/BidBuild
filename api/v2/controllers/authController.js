@@ -145,29 +145,22 @@ exports.getLoggedInUser = async (req, res) => {
       // Nosaka, vai ielogotais lietotājs ir klients vai piegādātājs
       if (currentUser.hasOwnProperty('KlientsID')) {
         userType = 'Klients';
-        res.status(200).json({
-          Vards: currentUser.Vards,
-          Uzvards: currentUser.Uzvards,
-          Epasts: currentUser.Epasts,
-          Numurs: currentUser.Talr_nr,
-          Pilseta: currentUser.Pilseta,
-          Role: userType,
-          ID: currentUser.KlientsID
-        });
       } else if (currentUser.hasOwnProperty('PiegadatajsID')) {
         userType = 'Piegadatajs';
-        res.status(200).json({
-          Vards: currentUser.Vards,
-          Uzvards: currentUser.Uzvards,
-          Epasts: currentUser.Epasts,
-          Numurs: currentUser.Talr_nr,
-          Pilseta: currentUser.Pilseta,
-          Role: userType,
-          ID: currentUser.PiegadatajsID
-        });
       }
 
+
+      // Aizsūta ielogotā lietotāja datus uz nuxt
+      res.status(200).json({
+        Vards: currentUser.Vards,
+        Uzvards: currentUser.Uzvards,
+        Epasts: currentUser.Epasts,
+        Numurs: currentUser.Talr_nr,
+        Pilseta: currentUser.Pilseta,
+        Role: userType,
+      });
+
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ message: 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.'})
     }
 };

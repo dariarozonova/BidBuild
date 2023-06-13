@@ -64,12 +64,17 @@ export default {
     return {
       email: '',
       password: '',
-      emailRules: [v => !!v || 'Šis lauks ir nepieciešams', v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-Pastam jābūt pareizā formātā.',],
-      passwordRules: [v => !!v || 'Šis lauks ir nepieciešams',],
-      responseData: '',
+      emailRules: [
+        v => !!v || 'Šis lauks ir nepieciešams',
+        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-Pastam jābūt pareizā formātā.'
+      ],
+      passwordRules: [
+        v => !!v || 'Šis lauks ir nepieciešams'
+      ],
       snackbar: false,
       isFormValid: false,
-      snackbarColor: ''
+      snackbarColor: '',
+      responseData: ''
     }
   },
 
@@ -81,9 +86,7 @@ export default {
           email: this.email,
           password: this.password
         }
-
-        console.log(formData)
-        let response = await this.$auth.loginWith('local', {
+        await this.$auth.loginWith('local', {
           data: formData,
         })
 
@@ -91,12 +94,9 @@ export default {
 
       } catch (error) {
         if(error.response){
-          if (error.response.status === 401) {
-            this.showSnackbar('red', error.response.data.message)
-          }
+          this.showSnackbar('red', error.response.data.message)
         } else {
-          console.log(error)
-          this.showSnackbar('red', error.message)
+          this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
         }
       }
     },

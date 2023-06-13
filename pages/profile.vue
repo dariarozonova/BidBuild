@@ -2,6 +2,7 @@
   <div class="everything">
   <Nav />
   <v-container class="mt-5" fluid>
+    <v-snackbar v-model="snackbar" :top="true" :timeout="3000" :color=this.snackbarColor>{{ responseData }}</v-snackbar>
     <v-row max-width="750px" justify="center">
       <v-col cols="12" md="6">
 
@@ -57,7 +58,7 @@
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-btn outlined color="indigo" @click="saveInfo">Saglabāt</v-btn>
+              <v-btn outlined color="success" @click="saveInfo">Saglabāt</v-btn>
               <v-btn outlined color="error" @click="cancelChanges">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
@@ -93,22 +94,22 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn outlined color="indigo" :disabled="!isPasswordFormValid" @click="savePassword">Saglabāt</v-btn>
+              <v-btn outlined color="success" :disabled="!isPasswordFormValid" @click="savePassword">Saglabāt</v-btn>
               <v-btn outlined color="error" @click="cancelChanges">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
 
         <!-- Datu dzēšanas dialogs -->
-        <v-dialog v-model="showPakalpojumsConfirmationDialog" max-width="500px">
+        <v-dialog v-model="showDeleteConfirmationDialog" max-width="500px">
           <v-card>
             <v-card-title>Apstiprināšana</v-card-title>
             <v-card-text>
               Vai tiešām vēlaties dzēst šo Pakalpojumu ?
             </v-card-text>
             <v-card-actions>
-              <v-btn outlined color="indigo" @click="deletePakalpojumsConfirm">Jā</v-btn>
-              <v-btn outlined color="error" @click="cancelPakalpojumsDelete">Nē</v-btn>
+              <v-btn outlined color="success" @click="deletePakalpojumsConfirm()">Jā</v-btn>
+              <v-btn outlined color="error" @click="cancelPakalpojumsDelete()">Nē</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -131,7 +132,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outlined color="indigo" @click="savePakalpojums">Saglabāt</v-btn>
+              <v-btn outlined color="success" @click="savePakalpojums">Saglabāt</v-btn>
               <v-btn outlined color="error" @click="cancelPakalpojumsEdit">Atcelt</v-btn>
             </v-card-actions>
           </v-card>
@@ -149,7 +150,7 @@
             <v-row>
               <v-col v-for="pakalpojums in Pakalpojumi" :key="pakalpojums.PakalpojumsID" cols="12">
                 <v-sheet rounded elevation="8">
-                  <v-card>
+                  <v-card class="text-wrap">
                     <v-card-title>
                       {{ pakalpojums.Pakalpojuma_nosaukums }}
                     </v-card-title>
@@ -163,7 +164,8 @@
                       {{ pakalpojums.Pakalpojuma_apraksts }}
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
+                      <v-btn outlined color="success" @click="editPakalpojums(pakalpojums)">Izveidot grafiku</v-btn>
+                      <v-btn outlined color="indigo" @click="deletePakalpojums(pakalpojums)">Apskatīt rezervācijas</v-btn>
                       <v-btn outlined color="indigo" @click="editPakalpojums(pakalpojums)">Rediģēt</v-btn>
                       <v-btn outlined color="error" @click="deletePakalpojums(pakalpojums)">Izdzēst</v-btn>
                     </v-card-actions>
@@ -234,10 +236,20 @@
               <v-col v-for="rezervacija in Rezervacijas" :key="rezervacija.RezervacijaID" cols="12">
                 <v-card>
                   <v-card-title>
-                    {{ rezervacija }}
+                    {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_nosaukums }}
                   </v-card-title>
                   <v-card-text>
-                    {{ rezervacija }}
+                    {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_apraksts }}
+                  </v-card-text>
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <div>Pakalpojums rezervērts uz: {{ rezervacija.Grafiks.Datums.split('T')[0] }}</div>
+                        <div v-if="rezervacija.Statuss == 'Proces_'">Rezervācijas statuss: Procesā</div>
+                        <div v-else-if="rezervacija.Statuss == 'Izpild_ts'">Rezervācijas statuss: Izpildīts</div>
+                        <div v-else>Rezervācijas statuss: Atcelts</div>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -270,23 +282,6 @@
             Nav rezervāciju vai pakalpojumu, ko attēlot.
           </v-card-text>
         </v-card>
-
-        <v-card v-if="selectedPakalpojums">
-          <v-card-title>
-            {{ selectedPakalpojums.Pakalpojuma_nosaukums }}
-          </v-card-title>
-          <v-card-text>
-            {{ selectedPakalpojums.Pakalpojuma_apraksts}}
-          </v-card-text>
-          <v-card-text>
-            {{ selectedPakalpojums.Cena }}
-          </v-card-text>
-          <v-card-text>
-            {{ selectedPakalpojums.Sfera_Pakalpojums_SferaToSfera}}
-          </v-card-text>
-          {{  selectedPakalpojums  }}
-        </v-card>
-
       </v-col>
     </v-row>
     <v-dialog v-model="showAddAtsausksmeDialog" max-width="500px">
@@ -329,7 +324,7 @@ export default {
     return {
       editDialog: false,
       changePasswordDialog: false,
-      showPakalpojumsConfirmationDialog: false,
+      showDeleteConfirmationDialog: false,
       showEditPakalpojumsDialog: false,
       isPasswordFormValid: false,
       showAddAtsausksmeDialog: false,
@@ -351,6 +346,11 @@ export default {
       ],
       Atsauksme: '',
       selectedPakalpojums: null,
+      selectedRezervacija: null,
+      responseData: '',
+      snackbar: false,
+      snackbarColor: '',
+
       currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -369,6 +369,12 @@ export default {
     },
   },
   methods: {
+    showSnackbar(color, message) {
+      this.responseData = message
+      this.snackbarColor = color
+      this.snackbar = true
+    },
+      
     openEditDialog() {
       this.editUserInfo = {
         Vards: this.userInfo.Vards,
@@ -417,7 +423,7 @@ export default {
 
     deletePakalpojums(pakalpojums) {
       this.selectedPakalpojums = pakalpojums;
-      this.showPakalpojumsConfirmationDialog = true;
+      this.showDeleteConfirmationDialog = true;
     },
 
     async getAtsauksmes(){
@@ -484,17 +490,24 @@ export default {
       this.showEditPakalpojumsDialog = false;
     },
 
+    cancelPakalpojumsDelete(){
+      this.selectedPakalpojums = null;
+      this.showDeleteConfirmationDialog = false;
+    },
+
     async deletePakalpojumsConfirm(){
       try {
         const deleteResponse = await this.$axios.delete(`/api/v2/pakalpojumi/${this.selectedPakalpojums.PakalpojumsID}`)
         if (deleteResponse.status == 200){
           this.Pakalpojumi = this.Pakalpojumi.filter((pakalpojums) => pakalpojums.PakalpojumsID !== this.selectedPakalpojums.PakalpojumsID );
           this.showPakalpojumsConfirmationDialog = false;
-        } else {
-          console.log(`Code: ${deleteResponse.status}, Message: ${deleteResponse.message}`)
         }
       } catch (error){
-        console.log(error)
+        if (error.response) {
+          this.showSnackbar('red', error.response.data.message);
+        } else {
+          this.showSnackbar('red', 'Notika kļūda dzēšot pakalpojumu');
+        }
       }
 
     },
@@ -510,12 +523,28 @@ export default {
         this.Pakalpojumi = response;
         this.pakalpojumsOptions = response;
       } catch (error) {
-        console.error(error);
-      }
+        if (error.response) {
+          this.showSnackbar('red', error.response.data.message);
+        } else {
+          this.showSnackbar('red', 'Notika kļūda ielādējot Pakalpojumus');
+        }
+        
+      } 
     },
 
     async getRezervacijas(){
-      console.log("Šeit mēs iegūstam Klienta rezervētos pakalpojumus")
+      try {
+        const response = await this.$axios.get(`/api/v2/rezervacijas/klients/${this.userInfo.ID}`)
+        if (response.status === 200) {
+          this.Rezervacijas = response.data
+        }
+      } catch (error) {
+        if (error.response) {
+          this.showSnackbar('red', error.response.data.message);
+        } else {
+          this.showSnackbar('red', 'Notika kļūda ielādējot Rezervācijas');
+        }
+      }
     }
 
   },

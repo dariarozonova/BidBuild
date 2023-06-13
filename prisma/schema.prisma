@@ -52,13 +52,13 @@ model Pakalpojums {
   Pakalpojuma_nosaukums                            String?     @db.Text
   Pakalpojuma_apraksts                             String?     @db.Text
   Sfera                                            Int
-  Cena                                             Float
-  Ievietosanas_datums                              DateTime    @default(now()) @db.DateTime(0)
-  Skatijumi                                        Int         @default(0)
+  Cena                                             Float?      @default(0.00)
+  Ievietosanas_datums                              DateTime?   @default(now()) @db.Timestamp(0)
+  Skatijumi                                        Int?        @default(0)
   Atsauksme                                        Atsauksme[]
   Grafiks                                          Grafiks[]
-  Sfera_Pakalpojums_SferaToSfera                   Sfera       @relation("Pakalpojums_SferaToSfera", fields: [Sfera], references: [SferaID], onDelete: Cascade, onUpdate: Restrict, map: "Pakalpojums_ibfk_1")
-  Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs Piegadatajs @relation("Pakalpojums_PiegadatajsToPiegadatajs", fields: [Piegadatajs], references: [PiegadatajsID], onDelete: Cascade, onUpdate: Restrict, map: "Pakalpojums_ibfk_2")
+  Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs Piegadatajs @relation("Pakalpojums_PiegadatajsToPiegadatajs", fields: [Piegadatajs], references: [PiegadatajsID], onDelete: Cascade, map: "Pakalpojums_ibfk_2")
+  Sfera_Pakalpojums_SferaToSfera                   Sfera       @relation("Pakalpojums_SferaToSfera", fields: [Sfera], references: [SferaID], onDelete: Cascade, map: "Pakalpojums_ibfk_1")
 
   @@index([Piegadatajs], map: "Piegadatajs")
   @@index([Sfera], map: "Sfera")
@@ -100,7 +100,7 @@ model Rezervacija {
 }
 
 model Sfera {
-  SferaID                              Int           @id
+  SferaID                              Int           @id @default(autoincrement())
   Sferas_nosaukums                     String?       @db.Text
   Pakalpojums_Pakalpojums_SferaToSfera Pakalpojums[] @relation("Pakalpojums_SferaToSfera")
 }

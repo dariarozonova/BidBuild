@@ -128,21 +128,23 @@ exports.deletePakalpojumsById = async (req, res) => {
 
 exports.createPakalpojums = async (req, res) => {
   try {
-    const { pakalpojuma_nosaukums, pakalpojuma_apraksts, sfera, cena, piegadatajs } = req.body;
+    const { Pakalpojuma_nosaukums, Pakalpojuma_apraksts, Sfera, Cena, Piegadatajs } = req.body;
 
-    const createdPakalpojums = await prisma.pakalpojums.create({
+    const createdPakalpojums = await prisma.Pakalpojums.create({
       data: {
-        Pakalpojuma_nosaukums: pakalpojuma_nosaukums,
-        Pakalpojuma_apraksts: pakalpojuma_apraksts,
-        Sfera: sfera,
-        Cena: cena,
-        Piegadatajs: {
-          connect: { PiegadatajsID: piegadatajs }
+        Pakalpojuma_nosaukums: Pakalpojuma_nosaukums,
+        Pakalpojuma_apraksts: Pakalpojuma_apraksts,
+        Cena: parseFloat(Cena),
+        Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs: {
+          connect: {
+            PiegadatajsID: parseInt(Piegadatajs)
+          },
+        },
+        Sfera_Pakalpojums_SferaToSfera: {
+          connect: {
+            SferaID: parseInt(Sfera)
+          }
         }
-      },
-      include: {
-        Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs: true,
-        Sfera_Pakalpojums_SferaToSfera: true
       },
     });
 

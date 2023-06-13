@@ -20,8 +20,26 @@ exports.getSferas = async (req, res) => {
         res.status(200).send(sferas);
       }
     } catch (error) {
-        res.status(500).send({ message: "Notika kļūda."});
+        res.status(500).send({ message: error.message });
     }
-  };
+};
+
+exports.addSfera = async (req, res) => {
+  const { Nosaukums } = req.body;
+  try {
+      const sfera = await prisma.sfera.create({
+        data: {
+          Sferas_nosaukums: Nosaukums
+        }
+      });
+      if (!sfera) {
+        res.status(500).send({ message: 'Notika kļūda izveidojot Sfēru.' });
+      } else {
+        res.status(201).send(sfera);
+      }
+  } catch (error) {
+      res.status(500).send({ message: error.message });
+  }
+};
   
   

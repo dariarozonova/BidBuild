@@ -154,8 +154,7 @@ export default {
   methods: {
 
     async submitForm() {
-      console.log("clicked!")
-      
+
       const formData = {
         name: this.name,
         surname: this.surname,
@@ -164,28 +163,14 @@ export default {
         role: this.role,
         password: this.password
       }
+
       try {
-
-        const response = await this.$axios.post('/api/v2/auth/register', formData)
-
-        if(response.status === 409){
-          this.showSnackbar('red', response.data.message)
-        } else if (response.status === 200) {
-          this.showSnackbar('green', response.data.message)
-          setTimeout(() => {
-            this.$router.push({ path: '/' });
-          }, 3000);
-
-        } else if (response.status === 409) {
-          this.showSnackbar('red', 'Šis E-Pasts jau ir reģistrēts')
-        } else {
-          this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
-        }
+        await this.$axios.post('/api/v2/auth/register', formData)
       } catch (error) {
         if(error.response){
-          if(error.response.status == 409){
-            this.showSnackbar('red', 'Šis E-Pasts jau ir reģistrēts')
-          }
+          this.showSnackbar('red', error.response.data.message)
+        } else {
+          this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.')
         }
       }
     },

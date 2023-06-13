@@ -17,16 +17,29 @@
         </v-btn>
         <v-spacer/>
         <template v-if="isAuthenticated">
-          <span @click="goToProfile">{{ name }} {{ surname }}</span>
+          <v-btn
+            outlined
+            color="indigo"
+            small
+            @click="goToProfile"
+          >
+            {{ name }} {{ surname }}
+            <v-icon
+              right
+              dark
+            >
+              mdi-account
+            </v-icon>
+          </v-btn>
+
         </template>
         <template v-else>
           <v-btn
             outlined
             color="indigo"
-            small>
-              <NuxtLink to="/login" replace>
-                Ienākt
-              </NuxtLink>
+            small
+            @click="goToLogin">
+              Ienākt
               <v-icon
               right
               dark>
@@ -37,10 +50,9 @@
           <v-btn
             outlined
             color="indigo"
-            small>
-              <NuxtLink to="/register" replace>
-                  Reģistrēties
-              </NuxtLink>
+            small
+            @clik="goToRegister">
+              Reģistrēties
             <v-icon
             right
             dark>
@@ -53,10 +65,9 @@
             outlined
             color="indigo"
             small
+            @click="goTosludinajumi"
           >
-            <NuxtLink to="/sludinajumi" target="_blank">
-              Sludinājumi
-            </NuxtLink>
+            Sludinājumi
             <v-icon
               right
               dark
@@ -68,10 +79,9 @@
           <v-btn
               outlined
               color="indigo"
-              small>
-                <NuxtLink to="/contact" replace>
+              small
+              @click="goToContact">
                     Palīdzība
-                </NuxtLink>
               <v-icon
               right
               dark>
@@ -129,6 +139,22 @@ export default {
 
     goToProfile(){
       this.$router.push('/profile')
+    },
+
+    goToLogin(){
+      this.$router.push('/login')
+    },
+
+    goToRegister(){
+      this.$router.push('/register')
+    },
+
+    goTosludinajumi(){
+      this.$router.push('/sludinajumi')
+    },
+
+    goToContact(){
+      this.$router.push('/contact')
     },
 
     logout(){

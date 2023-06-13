@@ -2,10 +2,10 @@
   <v-app dark>
     <v-container class="fill-height">
       <v-row justify="center">
-        <v-col cols="10">
+        <v-col cols="12">
           <h1>Kļūda!</h1>
-          <p>Kaut kas nogāja greizi :/</p>
-          <p class="red--text">Error : {{error.message}}</p>
+          <p v-if="this.error.statusCode === 404">Lapa netika atrasta :/</p>
+          <p v-else class="red--text">Error : {{error.message}}</p>
           <v-btn nuxt to="/" color="primary" class=text-capitalize>Atgriezties uz sākuma lapu</v-btn>
         </v-col>
       </v-row>
@@ -25,8 +25,8 @@ export default {
   },
   data () {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotFound: 'Lapa netika atrasta :/',
+      otherError: 'Notika kļūda'
     }
   },
   head () {
