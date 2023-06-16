@@ -4,7 +4,7 @@
       color="surface"
       dense
       light
-    >   
+    >
     <v-divider vertical class="mx-md-3 mx-2 transparent"/>
         <v-toolbar-title style='cursor: pointer;' @click="$router.push('/')" class="text-md-h5 font-weight-bold curson-pointer indigo--text" >
             BidBuild
@@ -51,7 +51,7 @@
             outlined
             color="indigo"
             small
-            @clik="goToRegister">
+            @click="goToRegister">
               Reģistrēties
             <v-icon
             right
@@ -89,7 +89,7 @@
               </v-icon>
             </v-btn>
             <v-divider vertical class="mx-md-5 mx-2 transparent"/>
-            <v-btn 
+            <v-btn
               v-if="isAuthenticated"
               outlined
               color="indigo"
@@ -161,8 +161,8 @@ export default {
       this.$router.push('/')
       this.$auth.logout()
     }
-    
+
   },
-  
+
 }
 </script>

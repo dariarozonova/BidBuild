@@ -373,7 +373,7 @@ export default {
       this.snackbarColor = color
       this.snackbar = true
     },
-      
+
     openEditDialog() {
       this.editUserInfo = {
         Vards: this.userInfo.Vards,
@@ -429,7 +429,6 @@ export default {
       try {
         const response = await this.$axios.get(`/api/v2/atsauksmes/id/${this.userInfo.ID}`);
         this.Atsauksmes = response.data;
-        console.log(response.data)
       } catch (error) {
         console.error(error);
       }
@@ -527,8 +526,8 @@ export default {
         } else {
           this.showSnackbar('red', 'Notika kļūda ielādējot Pakalpojumus');
         }
-        
-      } 
+
+      }
     },
 
     async getRezervacijas(){
