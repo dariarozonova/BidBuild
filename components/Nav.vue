@@ -127,7 +127,9 @@ export default {
           return 'Sludinājumi';
         case '/contact':
           return 'Contact Us';
-        case '/profile':
+        case '/profile/':
+          return 'Mans Profils';
+          case '/profile':
           return 'Mans Profils';
         default:
           return '';

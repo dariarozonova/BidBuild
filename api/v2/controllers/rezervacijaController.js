@@ -164,3 +164,51 @@ exports.createRezervacija = async (req, res) => {
     res.status(500).json({ message: error.message})
   }
 }
+
+
+exports.getRezervacijasForPiegadatajs = async (req, res) => {
+  const { id } = req.params;
+    try {
+      const rezervacija = await prisma.rezervacija.findMany({
+        where: {
+          Grafiks: {
+            Pakalpojums: {
+              Piegadatajs: parseInt(id)
+            }
+          }
+        },
+        select: {
+          Statuss: true,
+          RezervacijaID: true,
+          Klients: {
+            select: {
+              Vards: true,
+              Uzvards: true,
+              Epasts: true,
+            },
+          },
+          Grafiks: {
+            select: {
+              Statuss: true,
+              Datums: true,
+              Pakalpojums: {
+                select: {
+                  Pakalpojuma_nosaukums: true,
+                  Pakalpojuma_apraksts: true,
+                }
+              }
+            }
+          }
+        }
+      })
+
+      if (rezervacija) {
+        res.status(200).json(rezervacija);
+      } else {
+        res.status(404).json({ message: 'Rezervācijas šim klientam netika atrastas.'})
+      }
+
+    } catch (error) {
+      res.status(500).json({ message: error.message})
+    }
+};

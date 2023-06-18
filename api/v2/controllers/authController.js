@@ -73,7 +73,7 @@ exports.registerUser = async (req, res) => {
             return res.status(400).send({ error: true, message: 'Nepareiza loma.' })
         }
 
-        return res.send({ error: false, message: 'Lietotāja profils izveidots!' })
+        return res.status(200).send({ error: false, message: 'Lietotāja profils izveidots!' })
     } catch (error) {
         return res.status(500).send({ message: 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru.' })
     }
