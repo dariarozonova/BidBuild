@@ -127,8 +127,6 @@
               </v-select>
               <v-textarea outlined counter="300" v-model="Atsauksme" :rules="commentRules" ref="atsauksmesText" label="Jūsu atsauksme"></v-textarea>
             </v-card-text>
-            {{ Atsauksme }}
-            {{ selectedPakalpojums }}
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn outlined color="indigo" @click="saveAtsauksme">Pievienot</v-btn>

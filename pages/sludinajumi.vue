@@ -45,7 +45,7 @@
             <v-card-title color="primary">
               <v-row align="center">
                 <v-col cols="10">
-                  <span class="font-weight-bold indigo--text">
+                  <span style="cursor: pointer;" @click="goToPrivateProfile(selectedItem.Piegadatajs)" class="font-weight-bold indigo--text">
                     {{ selectedItem.Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs.Vards }} 
                     {{ selectedItem.Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs.Uzvards }}
                   </span>
@@ -133,7 +133,7 @@
                 event-color="#00ff00"
               ></v-date-picker>
               <v-alert
-                v-if="allowedDates"
+                v-if="!allowedDates"
                 dense
                 type="info"
               >
@@ -303,6 +303,11 @@ export default {
 
       cancelAddPakalpojums(){
         this.showAddPakalpojumsDialog = false
+      },
+
+      goToPrivateProfile(id) {
+        console.log(id)
+        this.$router.push(`/profile/piegadatajs/${id}`)
       },
       
       async openApplyDialog() {

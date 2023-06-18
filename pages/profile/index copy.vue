@@ -34,195 +34,151 @@
           </v-card-actions>
         </v-card>
 
+        
 
 
+        <!-- Attēlo piegādātāja izveidotos pakalpojumus -->
         <v-card class="mt-5" elevation="24" v-if="userInfo && userInfo.Role == 'Piegadatajs'">
-          <v-tabs style="border-bottom: 1px solid #ccc;" v-model="activeTab">
-            <v-tab v-for="(item, index) in piegadatajsItems" :key="index">
-              {{ item }}
-            </v-tab>
-          </v-tabs>
-          <v-tabs-items v-model="activeTab">
-            <v-tab-item>
-              <v-card elevation="24">
-              <v-card-title>Jūsu pakalpojumi<v-spacer vertical class="mx-5 transparent"></v-spacer></v-card-title>
-              <v-card-text v-if="Pakalpojumi.length > 0">
-                <v-row>
-                  <v-col v-for="pakalpojums in Pakalpojumi" :key="pakalpojums.PakalpojumsID" cols="12">
-                    <v-sheet rounded elevation="8">
-                      <v-card class="text-wrap">
-                        <v-card-title>
-                          {{ pakalpojums.Pakalpojuma_nosaukums }}
-                        </v-card-title>
-                        <v-card-text>
-                          <strong>Cena: </strong>{{ pakalpojums.Cena }} €
-                        </v-card-text>
-                        <v-card-text>
-                          <strong>Sfēra: </strong>{{ pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums }}
-                        </v-card-text>
-                        <v-card-text>
-                          {{ pakalpojums.Pakalpojuma_apraksts }}
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-btn outlined color="success" @click="editPakalpojums(pakalpojums)">Izveidot grafiku</v-btn>
-                          <v-btn outlined color="indigo" @click="deletePakalpojums(pakalpojums)">Apskatīt rezervācijas</v-btn>
-                          <v-btn outlined color="indigo" @click="editPakalpojums(pakalpojums)">Rediģēt</v-btn>
-                          <v-btn outlined color="error" @click="deletePakalpojums(pakalpojums)">Izdzēst</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-sheet>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-text class="mt-5" elevation="24" v-else>
-                <v-row>
-                  <v-col cols="12">
-                    <v-card>
-                      <v-card-title>
-                        Jums nav ievietotu pakalpojumu
-                      </v-card-title>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              </v-card>
-            </v-tab-item>
+          <v-card-title>Jūsu ievietotie pakalpojumi<v-spacer vertical class="mx-5 transparent"></v-spacer><v-btn
+            outlined
+            color="indigo"
+            >
+            Izveidot pakalpojumu </v-btn></v-card-title>
+          <v-card-text v-if="Pakalpojumi.length > 0">
+            <v-row>
+              <v-col v-for="pakalpojums in Pakalpojumi" :key="pakalpojums.PakalpojumsID" cols="12">
+                <v-sheet rounded elevation="8">
+                  <v-card class="text-wrap">
+                    <v-card-title>
+                      {{ pakalpojums.Pakalpojuma_nosaukums }}
+                    </v-card-title>
+                    <v-card-text>
+                      <strong>Cena: </strong>{{ pakalpojums.Cena }} €
+                    </v-card-text>
+                    <v-card-text>
+                      <strong>Sfēra: </strong>{{ pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums }}
+                    </v-card-text>
+                    <v-card-text>
+                      {{ pakalpojums.Pakalpojuma_apraksts }}
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn outlined color="success" @click="editPakalpojums(pakalpojums)">Izveidot grafiku</v-btn>
+                      <v-btn outlined color="indigo" @click="deletePakalpojums(pakalpojums)">Apskatīt rezervācijas</v-btn>
+                      <v-btn outlined color="indigo" @click="editPakalpojums(pakalpojums)">Rediģēt</v-btn>
+                      <v-btn outlined color="error" @click="deletePakalpojums(pakalpojums)">Izdzēst</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-sheet>
+              </v-col>
+            </v-row>
+          </v-card-text>
 
-            <v-tab-item>
-              <v-card elevation="24">
-              <v-card-title>Atsauksmes<v-spacer vertical class="mx-5 transparent"></v-spacer></v-card-title>
-              <v-card-text v-if="Atsauksmes.length > 0">
-                <v-row>
-                  <v-col v-for="atsauksme in Atsauksmes" :key="atsauksme.ID" cols="12">
-                    <v-card>
-                        <v-card-title>
-                          {{ atsauksme.Atsauksme }}
-                        </v-card-title>
-                        <v-card-text>
-                          <strong>Pakalpojums: </strong>{{ atsauksme.Pakalpojums.Pakalpojuma_nosaukums }}
-                        </v-card-text>
-                        <v-card-text>
-                          Atsauksme ievietota: {{ datetolocal(atsauksme.Datums) }}
-                        </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-text v-else>
-                <v-row>
-                  <v-col cols="12">
-                    <v-card>
-                      <v-card-title>
-                        Jums vēl nav atsauksmes
-                      </v-card-title>
-                    </v-card>
-                  </v-col>
-                </v-row>
-            </v-card-text>
-            </v-card>
-            </v-tab-item>
+          <v-card-text class="mt-5" elevation="24" v-else>
+            <v-row>
+              <v-col cols="12">
+                <v-card>
+                  <v-card-title>
+                    Jums nav ievietotu pakalpojumu
+                  </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
 
-            <v-tab-item>
-              <v-card elevation="24">
-              <v-card-title>Rezervācijas<v-spacer vertical class="mx-5 transparent"></v-spacer></v-card-title>
-              <v-card-text v-if="piegadatajsRezervacijas.length > 0">
-                <v-row>
-                  <v-col v-for="rezervacija in piegadatajsRezervacijas" :key="rezervacija.RezervacijaID" cols="12">
-                    <v-card>
-                        <v-card-title>
-                          {{ datetolocal(rezervacija.Grafiks.Datums) }}
-                        </v-card-title>
-                        <v-card-text>
-                          <strong>Pakalpojums: </strong>{{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_nosaukums }}
-                        </v-card-text>
-                        <v-card-text>
-                          Rezervēja: {{ rezervacija.Klients.Vards }} {{ rezervacija.Klients.Uzvards }}
-                        </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-text v-else>
-                <v-row>
-                  <v-col cols="12">
-                    <v-card>
-                      <v-card-title>
-                        Jūsu pakalpojumiem nav veiktas rezervācijas
-                      </v-card-title>
-                    </v-card>
-                  </v-col>
-                </v-row>
-            </v-card-text>
-            </v-card>
-            </v-tab-item>
+       <!-- Attēlo atsauskmes -->
+        <v-card class="mt-5" elevation="24" v-if="userInfo && userInfo.Role == 'Piegadatajs'">
+          <v-card-title>Atsauksmes<v-spacer vertical class="mx-5 transparent"></v-spacer>
+          <v-btn
+            outlined
+            color="indigo"
+            @click="addAtsauksme"
+            v-if="userInfo.Role == 'Piegadatajs'"
+            >
+            Pievienot atsauksmi </v-btn></v-card-title>
+          <v-card-text v-if="Atsauksmes.length > 0">
+            <v-row>
+              <v-col v-for="atsauksme in Atsauksmes" :key="atsauksme.ID" cols="12">
+                <v-card>
+                    <v-card-title>
+                      {{ atsauksme.Atsauksme }}
+                    </v-card-title>
+                    <v-card-text>
+                      <strong>Pakalpojums: </strong>{{ atsauksme.Pakalpojums.Pakalpojuma_nosaukums }}
+                    </v-card-text>
+                    <v-card-text>
+                      Atsauksme ievietota: {{ datetolocal(atsauksme.Datums) }}
+                    </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        <v-card-text v-else>
+            <v-row>
+              <v-col cols="12">
+                <v-card>
+                  <v-card-title>
+                    Jums vēl nav atsauksmes
+                  </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
+        </v-card-text>
+        </v-card>
 
-            <v-tab-item>
-              <v-card elevation="24">
-                <v-card-title>Skatījumu statistika<v-spacer vertical class="mx-5 transparent"></v-spacer></v-card-title>
-                <v-card-text>
-                  <h3>Hey there</h3>
-                </v-card-text>
-              </v-card>
-            </v-tab-item>
-          </v-tabs-items>
+        <!-- Attēlo klienta rezervētos pakalpojumus -->
+        <v-card class="mt-5" elevation="24" v-else-if="userInfo && userInfo.Role == 'Klients'">
+          <v-card-title>Jūsu veiktās rezervācijas</v-card-title>
+          <v-card-text v-if="Rezervacijas.length > 0">
+            <v-row>
+              <v-col v-for="rezervacija in Rezervacijas" :key="rezervacija.RezervacijaID" cols="12">
+                <v-card>
+                  <v-card-title>
+                    {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_nosaukums }}
+                  </v-card-title>
+                  <v-card-text>
+                    {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_apraksts }}
+                  </v-card-text>
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <div>Pakalpojums rezervērts uz: {{ rezervacija.Grafiks.Datums.split('T')[0] }}</div>
+                        <div v-if="rezervacija.Statuss == 'Proces_'">Rezervācijas statuss: Procesā</div>
+                        <div v-else-if="rezervacija.Statuss == 'Izpild_ts'">Rezervācijas statuss: Izpildīts</div>
+                        <div v-else>Rezervācijas statuss: Atcelts</div>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="editRezervacija(rezervacija)">Rediģēt</v-btn>
+                    <v-btn color="error darken-1" @click="deleteRezervacija(rezervacija)">Izdzēst</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+          <v-card-text class="mt-5" elevation="24" v-else>
+            <v-row>
+              <v-col cols="12">
+                <v-card>
+                  <v-card-title>
+                    Jums nav veikta neviena pakalpojuma rezervācija
+                  </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
         </v-card>
 
 
-
-        <v-card class="mt-5" elevation="24" v-if="userInfo && userInfo.Role == 'Klients'">
-          <v-tabs style="border-bottom: 1px solid #ccc;" v-model="activeTab">
-            <v-tab v-for="(item, index) in klientsItems" :key="index">
-              {{ item }}
-            </v-tab>
-          </v-tabs>
-          <v-tabs-items v-model="activeTab">
-
-            <v-card elevation="24">
-              <v-card-title>Jūsu veiktās rezervācijas</v-card-title>
-              <v-card-text v-if="Rezervacijas.length > 0">
-                <v-row>
-                  <v-col v-for="rezervacija in Rezervacijas" :key="rezervacija.RezervacijaID" cols="12">
-                    <v-card>
-                      <v-card-title>
-                        {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_nosaukums }}
-                      </v-card-title>
-                      <v-card-text>
-                        {{ rezervacija.Grafiks.Pakalpojums.Pakalpojuma_apraksts }}
-                      </v-card-text>
-                      <v-card-text>
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <div>Pakalpojums rezervērts uz: {{ rezervacija.Grafiks.Datums.split('T')[0] }}</div>
-                            <div v-if="rezervacija.Statuss == 'Proces_'">Rezervācijas statuss: Procesā</div>
-                            <div v-else-if="rezervacija.Statuss == 'Izpild_ts'">Rezervācijas statuss: Izpildīts</div>
-                            <div v-else>Rezervācijas statuss: Atcelts</div>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="editRezervacija(rezervacija)">Rediģēt</v-btn>
-                        <v-btn color="error darken-1" @click="deleteRezervacija(rezervacija)">Izdzēst</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-
-              <v-card-text class="mt-5" elevation="24" v-else>
-                <v-row>
-                  <v-col cols="12">
-                    <v-card>
-                      <v-card-title>
-                        Jums nav veikta neviena pakalpojuma rezervācija
-                      </v-card-title>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-
-          </v-tabs-items>
+        <!-- Attēlo "Nav Satura", šim nevajadzētu notikt :))-->
+        <v-card class="mt-5" elevation="24" v-else>
+          <v-card-title>Nav satura</v-card-title>
+          <v-card-text>
+            Nav rezervāciju vai pakalpojumu, ko attēlot.
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -367,16 +323,6 @@ export default {
   middleware: 'isAuthenticated',
   data() {
     return {
-
-      activeTab: 0,
-      piegadatajsItems: [
-        'Pakalpojumi', 'Atsauksmes', 'Rezervācijas', 'Statistika'
-      ],
-      klientsItems: [
-        'Rezervācijas'
-      ],
-
-
       editDialog: false,
       changePasswordDialog: false,
       showDeleteConfirmationDialog: false,
@@ -392,11 +338,9 @@ export default {
       },
       Pakalpojumi: [],
       Rezervacijas: [],
-      piegadatajsRezervacijas: [],
       Sferas: [],
       Atsauksmes: [],
       pakalpojumsOptions: [],
-      rezervetiePakalpojumi: [],
       selectedRezervacija: null,
       options: [
         '',
@@ -499,9 +443,10 @@ export default {
 
     addAtsauksme() {
         this.showAddAtsausksmeDialog = true;
-    },
+      },
 
     resetAtsauksme() {
+      console.log('Atjaunošana');
       this.Atsauksme = '';
       this.selectedAdvertisement = null;
     },
@@ -515,6 +460,7 @@ export default {
       this.resetValidation();
       this.resetAtsauksme();
 
+      // Reset the values of the form fields
       this.$refs.atsauksmesText.$el.value = '';
       this.$refs.atsauksmesSelect.$el.value = null;
 
@@ -523,7 +469,7 @@ export default {
 
     saveAtsauksme() {
       console.log("saved")
-    },
+      },
 
     async editPakalpojums(pakalpojums){
       if(this.Sferas.length === 0){
@@ -547,16 +493,6 @@ export default {
     cancelPakalpojumsDelete(){
       this.selectedPakalpojums = null;
       this.showDeleteConfirmationDialog = false;
-    },
-
-
-    deleteRezervacija(rezervacija) {
-      
-      const index = this.Rezervacijas.findIndex((item) => item.RezervacijaID === rezervacija.RezervacijaID);
-      if (index !== -1) {
-        this.Rezervacijas.splice(index, 1);
-      }
-      this.showSnackbar('Reservation deleted successfully', 'success');
     },
 
     async deletePakalpojumsConfirm(){
@@ -604,30 +540,15 @@ export default {
           this.showSnackbar('red', 'Notika kļūda ielādējot Rezervācijas');
         }
       }
-    },
-
-    async getPiegadatajsRezervacijas() {
-      try {
-        const response = await this.$axios.get(`/api/v2/rezervacijas/all/${this.userInfo.ID}`)
-        if (response.status === 200) {
-          this.piegadatajsRezervacijas = response.data
-        }
-      } catch (error) {
-        if (error.response) {
-          this.showSnackbar('red', error.response.data.message);
-        } else {
-          this.showSnackbar('red', 'Notika kļūda ielādējot Rezervācijas');
-        }
-      }
     }
+
   },
 
   created() {
+    this.getAtsauksmes();
     this.updateUserData();
     if(this.userInfo.Role == "Piegadatajs"){
       this.getPakalpojumi();
-      this.getAtsauksmes();
-      this.getPiegadatajsRezervacijas();
     } else if (this.userInfo.Role == "Klients"){
       this.getRezervacijas();
     } else {
@@ -641,7 +562,6 @@ export default {
 .everything {
   background: url('static/brick_wall.png');
   background-size: cover;
-  background-attachment: fixed;
   max-width: 100%;
   height: 100%;
 }

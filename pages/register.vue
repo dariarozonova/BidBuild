@@ -165,7 +165,14 @@ export default {
       }
 
       try {
-        await this.$axios.post('/api/v2/auth/register', formData)
+        let response = await this.$axios.post('/api/v2/auth/register', formData)
+
+        if (response) {
+          this.showSnackbar('green', response.data.message)
+          setTimeout(this.$router.push('/'), 2000)
+        }
+
+
       } catch (error) {
         if(error.response){
           this.showSnackbar('red', error.response.data.message)
