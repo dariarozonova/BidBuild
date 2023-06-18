@@ -61,44 +61,47 @@ exports.getAtsauksmeById = async (req, res) => {
 // Izveido jaunu atsauksmi ar req.body ievadītajiem parametriem
 
 exports.createAtsauksme = async (req, res) => {
-    try {
-      const { Atsauksme, Pakalpojums_id } = req.body;
+  try {
+    const { KlientsID, Atsauksme, Pakalpojums_id } = req.body;
 
-      const createdAtsauksme = await prisma.atsauksme.create({
-        data: {
-            Atsauksme: Atsauksme,
-            Pakalpojums_id: Pakalpojums_id,
-        },
-      });
+    console.log(KlientsID, Atsauksme, Pakalpojums_id)
 
-      res.status(201).send(createdAtsauksme);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+    const createdAtsauksme = await prisma.atsauksme.create({
+      data: {
+          Atsauksme: Atsauksme,
+          Pakalpojums_id: Pakalpojums_id,
+          Klients_id: KlientsID
+      },
+    });
 
-  exports.addView = async (req, res) => {
-    try{
-      const { ID } = req.body
-
-
-      const atsauksme = await prisma.atsauksme.update({
-        where: {
-          ID: parseInt(ID),
-        },
-        data: {
-          Skatijumi: {
-            increment: 1
-          }
-        }
-      })
-
-      res.status(200).send(atsauksme);
-
-
-    } catch (error){
-      console.log(error)
-    }
+    res.status(201).send(createdAtsauksme);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+};
+
+exports.addView = async (req, res) => {
+  try{
+    const { ID } = req.body
+
+
+    const atsauksme = await prisma.atsauksme.update({
+      where: {
+        ID: parseInt(ID),
+      },
+      data: {
+        Skatijumi: {
+          increment: 1
+        }
+      }
+    })
+
+    res.status(200).send(atsauksme);
+
+
+  } catch (error){
+    console.log(error)
+  }
+}
 
 

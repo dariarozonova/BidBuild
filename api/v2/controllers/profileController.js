@@ -24,7 +24,13 @@ exports.getProfile = async (req, res) => {
           Pilseta: true
         }
       })
-      res.status(200).json(response)
+
+      if(!response){
+        res.status(200).json({message: "Klients netika atrasts"})
+      } else {
+        res.status(200).json(response)
+      }
+
     } else if(Role == 'piegadatajs') {
       const response = await prisma.piegadatajs.findUnique({
         where: {
@@ -38,6 +44,7 @@ exports.getProfile = async (req, res) => {
           Pilseta: true,
           Pakalpojums_Pakalpojums_PiegadatajsToPiegadatajs: {
             select: {
+              PakalpojumsID: true,
               Pakalpojuma_nosaukums: true,
               Pakalpojuma_apraksts: true,
               Cena: true,
@@ -48,6 +55,7 @@ exports.getProfile = async (req, res) => {
               },
               Atsauksme: {
                 select: {
+                  ID: true,
                   Atsauksme: true,
                   Datums: true,
                   Klients: {
@@ -62,7 +70,11 @@ exports.getProfile = async (req, res) => {
           }
         }
       })
-      res.status(200).json(response)
+      if(!response){
+        res.status(200).json({ message: "Piegādātājs netika atrasts" })
+      } else {
+        res.status(200).json(response)
+      }
     } else {
       res.status(404).json({ message: "Lietotājs netika atrasts."})
     }

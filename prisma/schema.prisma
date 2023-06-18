@@ -12,7 +12,7 @@ model Atsauksme {
   Klients_id     Int
   Atsauksme      String?     @db.Text
   Pakalpojums_id Int
-  Datums         DateTime    @db.Timestamp(0)
+  Datums         DateTime    @default(now()) @db.Timestamp(0)
   Klients        Klients     @relation(fields: [Klients_id], references: [KlientsID], onDelete: NoAction, onUpdate: NoAction, map: "Atsauksme_ibfk_1")
   Pakalpojums    Pakalpojums @relation(fields: [Pakalpojums_id], references: [PakalpojumsID], onDelete: Cascade, onUpdate: Restrict, map: "Atsauksme_ibfk_2")
 
@@ -89,7 +89,7 @@ model Pilseta {
 model Rezervacija {
   RezervacijaID Int                  @id @default(autoincrement())
   Grafiks_id    Int
-  Datums        DateTime?            @db.Date
+  Datums        DateTime             @default(now()) @db.Timestamp(0)
   Statuss       Rezervacija_Statuss?
   Klients_id    Int
   Grafiks       Grafiks              @relation(fields: [Grafiks_id], references: [GrafiksID], onDelete: Cascade, onUpdate: Restrict, map: "Rezervacija_ibfk_1")

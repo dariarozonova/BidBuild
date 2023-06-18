@@ -510,11 +510,6 @@ export default {
 
     },
 
-    cancelPakalpojumsDelete() {
-      this.selectedPakalpojums = null;
-      this.showConfirmationDialog = false;
-    },
-
     async getPakalpojumi(){
       try {
         const response = await this.$axios.$get(`/api/v2/pakalpojumi/email/${this.userInfo.Epasts}`);
