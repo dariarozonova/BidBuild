@@ -158,10 +158,14 @@
 
             <v-tab-item>
               <v-card elevation="24">
-                <v-card-title>Skatījumu statistika<v-spacer vertical class="mx-5 transparent"></v-spacer></v-card-title>
-                <v-card-text>
-                  <h3>Hey there</h3>
-                </v-card-text>
+                <v-toolbar
+                  color="white">
+                  <v-spacer></v-spacer>
+                  <v-toolbar-title class="font-weight-bold indigo--text">Sludinājumu statistika</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                </v-toolbar>
+                <Bar v-if="loaded" :chartData="chartData" :options="chartOptions" />
+                <v-card-text style="text-align: center">{{ lastUpdate }}</v-card-text>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -362,11 +366,53 @@
 </template>
 
 <script>
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 
 export default {
   middleware: 'isAuthenticated',
+  components: { Bar },
   data() {
     return {
+
+      loaded: false,
+      chartData: null,
+      lastUpdate: null,
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              borderColor: 'rgba(0, 0, 0, 0.1)',
+            },
+            ticks: {
+              color: 'rgba(0, 0, 255, 1)',
+            },
+          },
+          x: {
+            grid: {
+              borderColor: 'rgba(0, 0, 0, 0)',
+            },
+            ticks: {
+              color: 'rgba(0, 0, 255, 1)',
+            },
+          },
+        },
+      },
+
 
       activeTab: 0,
       piegadatajsItems: [
@@ -403,7 +449,6 @@ export default {
       ],
       Atsauksme: '',
       selectedPakalpojums: null,
-      selectedRezervacija: null,
       responseData: '',
       snackbar: false,
       snackbarColor: '',
@@ -551,12 +596,12 @@ export default {
 
 
     deleteRezervacija(rezervacija) {
-      
+
       const index = this.Rezervacijas.findIndex((item) => item.RezervacijaID === rezervacija.RezervacijaID);
       if (index !== -1) {
         this.Rezervacijas.splice(index, 1);
       }
-      this.showSnackbar('Reservation deleted successfully', 'success');
+      this.showSnackbar('success', 'Rezervacija izdzesta');
     },
 
     async deletePakalpojumsConfirm(){
@@ -564,7 +609,7 @@ export default {
         const deleteResponse = await this.$axios.delete(`/api/v2/pakalpojumi/${this.selectedPakalpojums.PakalpojumsID}`)
         if (deleteResponse.status == 200){
           this.Pakalpojumi = this.Pakalpojumi.filter((pakalpojums) => pakalpojums.PakalpojumsID !== this.selectedPakalpojums.PakalpojumsID );
-          this.showPakalpojumsConfirmationDialog = false;
+          this.showDeleteConfirmationDialog = false;
         }
       } catch (error){
         if (error.response) {
@@ -577,15 +622,29 @@ export default {
     },
 
     async getPakalpojumi(){
+      this.loaded = false;
       try {
         const response = await this.$axios.$get(`/api/v2/pakalpojumi/email/${this.userInfo.Epasts}`);
         this.Pakalpojumi = response;
         this.pakalpojumsOptions = response;
+
+        this.chartData = {
+          labels: this.Pakalpojumi.map((item) => item.Pakalpojuma_nosaukums),
+          datasets: [
+            {
+              label: 'Skatījumi',
+              data: this.Pakalpojumi.map((item) => item.Skatijumi),
+              backgroundColor: 'rgba(0, 0, 255, 0.6)',
+            },
+          ],
+        }
+        this.loaded = true;
       } catch (error) {
         if (error.response) {
           this.showSnackbar('red', error.response.data.message);
         } else {
           this.showSnackbar('red', 'Notika kļūda ielādējot Pakalpojumus');
+          console.log(error)
         }
 
       }

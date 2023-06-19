@@ -17,15 +17,6 @@
             hide-details
             class="mx-4"
           ></v-text-field>
-          <v-select
-            v-if="!this.filterBy"
-            max-width="50px"
-            v-model="filterPicker"
-            :items="Sferas"
-            item-text="Sferas_nosaukums"
-            item-value="Sferas_nosaukums"
-            label="Filtrēt pēc..."
-          ></v-select>
           <v-btn
             v-if="isPiegadatajs || !isAuthenticated"
             class="mx-4"
@@ -56,7 +47,7 @@
               <v-row align="center">
                 <v-col cols="10">
                   <span style="cursor: pointer;" @click="goToPrivateProfile(selectedItem.Piegadatajs)" class="font-weight-bold indigo--text">
-                    {{ selectedItem.Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs.Vards }} 
+                    {{ selectedItem.Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs.Vards }}
                     {{ selectedItem.Piegadatajs_Pakalpojums_PiegadatajsToPiegadatajs.Uzvards }}
                   </span>
                   <div>{{ selectedItem.Pakalpojuma_nosaukums }}</div>
@@ -191,7 +182,6 @@ export default {
         newDate: null,
         picker: '',
         showAddPakalpojumsDialog: false,
-        showAddPakalpojumsDialog: false,
         applyDialog: false,
         headers: [
           {
@@ -230,24 +220,7 @@ export default {
       },
   },
 
-  watch: {
-    filterPicker: {
-      handler: 'filterPakalpojumi',
-      immediate: true
-    }
-  },
-
   methods: {
-
-    filterPakalpojumi() {
-      if (this.filterPicker) {
-        this.filteredPakalpojumi = this.pakalpojumi.filter(pakalpojums => {
-          return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === this.filterPicker;
-        });
-      } else {
-        this.filteredPakalpojumi = this.pakalpojumi;
-      }
-    },
 
       async getAllPakalpojumi(){
         this.loading = true;
@@ -269,6 +242,20 @@ export default {
                 this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
                   return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Iekšdarbi';
                 });
+              } else if (this.filterBy === 'aradarbi'){
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Āra darbi';
+                });
+              } else if (this.filterBy === 'dizains'){
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Dizains';
+                });
+              } else if (this.filterBy === 'darzadarbi'){
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Dārza darbi';
+                });
+              } else {
+                this.pakalpojumi = getPakalpojumi.data;
               }
             } else if (this.filterPicker) {
               this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
@@ -283,7 +270,7 @@ export default {
         } catch (error) {
           if (error.response){
             this.showSnackbar('red', error.response.data.message);
-            
+
           } else {
             this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru');
             this.loading = false;
@@ -315,7 +302,7 @@ export default {
       datetolocal(date){
         const newDate = new Date(date)
         return newDate.toLocaleString()
-      }, 
+      },
 
       async addPakalpojumsDialog() {
         if(!this.isAuthenticated){
@@ -334,7 +321,7 @@ export default {
         } catch (error) {
           console.log(error)
         }
-        
+
       },
 
       async addPakalpojums() {
@@ -372,7 +359,7 @@ export default {
         console.log(id)
         this.$router.push(`/profile/piegadatajs/${id}`)
       },
-      
+
       async openApplyDialog() {
         if (!this.isAuthenticated) {
           this.$router.push('/login')
@@ -389,7 +376,7 @@ export default {
           } catch (error) {
             console.log(error)
           }
-          
+
         }
       },
 
@@ -424,13 +411,13 @@ export default {
           } else {
             this.showSnackbar('red', 'Ir notikusi kļūda, lūdzams sazināties ar sistēmas administratoru');
           }
-          
+
         }
       },
 
     },
 
-    
+
 
     async mounted() {
       this.getAllPakalpojumi(),

@@ -134,6 +134,7 @@
 
 <script>
 export default {
+  components: { Bar },
   data() {
     return {
       loading: true,
@@ -155,6 +156,8 @@ export default {
         Pilseta: '',
       },
       Atsauksmes: [],
+
+
     };
   },
   computed: {

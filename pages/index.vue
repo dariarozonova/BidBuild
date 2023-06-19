@@ -20,7 +20,7 @@
           position="right"
           >
             <h1 class="font-weight-bold orange--text">Mēs esam BidBuild</h1>
-            <h2 class="font-weight-bold indigo--text">  Mēs esam jauna BidBuild sistēma, kur mūsu lietotājiem būs iespējams 
+            <h2 class="font-weight-bold indigo--text">  Mēs esam jauna BidBuild sistēma, kur mūsu lietotājiem būs iespējams
               atrast sev visizdevīgāko būvniecības darbu pakalpojumu piegādātāju, atkarībā no vietas, cenas un kvalitātes, bet lietotājiem, kuri piedāvā pakalpojumus, būs iespējams paplašināt sev potenciālo klientu daudzumu.</h2>
           </v-sheet>
         </v-col>
@@ -52,7 +52,7 @@
                     color="orange"
                     middle
                     >
-                    <Nuxt-link to="/pakalpojumi" target="_blank" style="text-decoration:none">
+                    <Nuxt-link :to='card.link' target="_blank" style="text-decoration:none">
                     Sākt
                     </Nuxt-link>
                   </v-btn>
@@ -83,7 +83,7 @@
                     color="orange"
                     middle
                     >
-                    <Nuxt-link to="/pakalpojumi" target="_blank" style="text-decoration:none">
+                    <Nuxt-link :to='card.link' target="_blank" style="text-decoration:none">
                     Sākt
                     </Nuxt-link>
                   </v-btn>
@@ -102,22 +102,22 @@
 import Nav from '../components/Nav.vue'
 export default {
   components: { Nav },
-  name: 'IndexPage', 
+  name: 'IndexPage',
   data(){
     return {
       cards1: [
-        { title: 'Arhitektūra', src: 'arch.jpg', flex: 4 },
-        { title: 'Projektēšana', src: 'proj.jpg', flex: 4 },
-        { title: 'Iekšdarbi', src: 'iekš.jpg', flex: 4 },
+        { title: 'Arhitektūra', src: 'arch.jpg', flex: 4, link: '/sludinajumi?type=arhitektura' },
+        { title: 'Projektēšana', src: 'proj.jpg', flex: 4, link: '/sludinajumi?type=projektesana' },
+        { title: 'Iekšdarbi', src: 'iekš.jpg', flex: 4, link: '/sludinajumi?type=ieksdarbi' },
       ],
       cards2: [
-        { title: 'Āra darbi', src: 'ara1.jpg', flex: 4 },
-        { title: 'Dizains', src: 'design2.jpg', flex: 4 },
-        { title: 'Dārza darbi', src: 'darzs.jpg', flex: 4 },
+        { title: 'Āra darbi', src: 'ara1.jpg', flex: 4, link: '/sludinajumi?type=aradarbi' },
+        { title: 'Dizains', src: 'design2.jpg', flex: 4, link: '/sludinajumi?type=dizains' },
+        { title: 'Dārza darbi', src: 'darzs.jpg', flex: 4, link: '/sludinajumi?type=darzadarbi' },
       ]
     }
   },
 
-    
+
 }
 </script>
