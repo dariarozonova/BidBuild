@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// GET http://localhost:8080/api/v2/pakalpojumi
+// GET http://localhost:8080/api/v2/
 // Izvada visus pakalpojumus json formātā
 
 exports.getAllAtsauksmes = async (req, res) => {
