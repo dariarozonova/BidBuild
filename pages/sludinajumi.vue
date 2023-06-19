@@ -17,8 +17,18 @@
             hide-details
             class="mx-4"
           ></v-text-field>
+          <v-select
+            v-if="!this.filterBy"
+            max-width="50px"
+            v-model="filterPicker"
+            :items="Sferas"
+            item-text="Sferas_nosaukums"
+            item-value="Sferas_nosaukums"
+            label="Filtrēt pēc..."
+          ></v-select>
           <v-btn
             v-if="isPiegadatajs || !isAuthenticated"
+            class="mx-4"
             outlined
             color="indigo"
             small
@@ -173,6 +183,7 @@ export default {
         search: '',
         responseData: '',
         snackbarColor: '',
+        filterPicker: '',
         dialog: false,
         loading: true,
         selectedItem: null,
@@ -196,12 +207,17 @@ export default {
         newPakalpojums: [],
         Sferas: [],
         pakalpojumaGrafiks: [],
+        filterPakalpojumi: [],
       }
     },
 
     computed: {
       isAuthenticated() {
         return this.$store.getters.isAuthenticated;
+      },
+
+      filterBy() {
+        return this.$route.query.type
       },
 
       isPiegadatajs() {
@@ -212,9 +228,26 @@ export default {
           return false;
         }
       },
-    },
+  },
 
-    methods: {
+  watch: {
+    filterPicker: {
+      handler: 'filterPakalpojumi',
+      immediate: true
+    }
+  },
+
+  methods: {
+
+    filterPakalpojumi() {
+      if (this.filterPicker) {
+        this.filteredPakalpojumi = this.pakalpojumi.filter(pakalpojums => {
+          return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === this.filterPicker;
+        });
+      } else {
+        this.filteredPakalpojumi = this.pakalpojumi;
+      }
+    },
 
       async getAllPakalpojumi(){
         this.loading = true;
@@ -222,11 +255,31 @@ export default {
           const getPakalpojumi = await this.$axios.get('/api/v2/pakalpojumi')
 
 
-          if(getPakalpojumi.status == 200){
-            this.pakalpojumi = getPakalpojumi.data;
+          if (getPakalpojumi.status === 200) {
+            if (this.filterBy) {
+              if (this.filterBy === 'arhitektura') {
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Arhitektūra';
+                });
+              } else if (this.filterBy === 'projektesana') {
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Projektēšana';
+                });
+              } else if (this.filterBy === 'ieksdarbi') {
+                this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                  return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === 'Iekšdarbi';
+                });
+              }
+            } else if (this.filterPicker) {
+              this.pakalpojumi = getPakalpojumi.data.filter((pakalpojums) => {
+                return pakalpojums.Sfera_Pakalpojums_SferaToSfera.Sferas_nosaukums === this.filterPicker;
+              });
+            } else {
+              this.pakalpojumi = getPakalpojumi.data;
+            }
             this.loading = false;
-            console.log("Dati iegūti, yay")
-          }  
+            console.log('Dati iegūti, yay');
+          }
         } catch (error) {
           if (error.response){
             this.showSnackbar('red', error.response.data.message);
@@ -272,6 +325,16 @@ export default {
           const allSferas = await this.$axios.get('/api/v2/sferas')
           this.Sferas = allSferas.data
         }
+      },
+
+      async getAllSferas() {
+        try {
+          const allSferas = await this.$axios.get('/api/v2/sferas')
+          this.Sferas = allSferas.data
+        } catch (error) {
+          console.log(error)
+        }
+        
       },
 
       async addPakalpojums() {
@@ -370,7 +433,8 @@ export default {
     
 
     async mounted() {
-      this.getAllPakalpojumi()
+      this.getAllPakalpojumi(),
+      this.getAllSferas()
     }
 }
 </script>
