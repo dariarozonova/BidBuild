@@ -26,7 +26,7 @@ exports.getProfile = async (req, res) => {
       })
 
       if(!response){
-        res.status(200).json({message: "Klients netika atrasts"})
+        res.status(404).json({message: "Klients netika atrasts"})
       } else {
         res.status(200).json(response)
       }
@@ -71,7 +71,7 @@ exports.getProfile = async (req, res) => {
         }
       })
       if(!response){
-        res.status(200).json({ message: "Piegādātājs netika atrasts" })
+        res.status(404).json({ message: "Piegādātājs netika atrasts" })
       } else {
         res.status(200).json(response)
       }

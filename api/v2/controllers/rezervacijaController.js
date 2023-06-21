@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 exports.sendEmail = async (req, res) => {
     try {
-  
+
       const { recipient, subject, emailText } = req.body;
 
       console.log(req.body)
@@ -24,7 +24,7 @@ exports.sendEmail = async (req, res) => {
         subject: subject,
         text: emailText
       });
-  
+
       console.log(`Email sent to ${recipient}`);
       res.status(200).send('It worked')
     } catch (error) {
@@ -156,10 +156,10 @@ exports.createRezervacija = async (req, res) => {
           Statuss: "Aiz_emts"
         },
       });
-    
+
       res.status(200).json({ message: 'Rezervācija pieteikta veiksmīgi!'});
-      
-    }  
+
+    }
   } catch (error) {
     res.status(500).json({ message: error.message})
   }
@@ -212,3 +212,16 @@ exports.getRezervacijasForPiegadatajs = async (req, res) => {
       res.status(500).json({ message: error.message})
     }
 };
+
+exports.deleteRezervacija = async (req,res) => {
+  const { id } = req.params;
+  try{
+    const rezervacija = await prisma.rezervacija.delete({
+      where: { RezervacijaID: parseInt(id) },
+    });
+
+    res.status(200).json(rezervacija);
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
+}

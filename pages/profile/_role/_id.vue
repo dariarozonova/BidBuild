@@ -123,24 +123,75 @@
 
             </v-col>
           </v-row>
+          <v-dialog v-model="showAddAtsausksmeDialog" max-width="500px">
+        <v-card class="mt-5" elevation="24">
+          <v-col cols="12">
+            <v-card-title class="headline">Pievienot atsauksmi</v-card-title>
+            <v-card-text>
+              <v-select
+                outlined
+                v-model="selectedPakalpojums"
+                :items="pakalpojumsOptions"
+                :rules="pakRules"
+                label="Izvēlaties pakalpojumu"
+                ref="atsauksmesSelect"
+                item-text="Pakalpojuma_nosaukums"
+                item-value="PakalpojumsID"
+                required
+              >
+              </v-select>
+              <v-textarea outlined counter="300" v-model="Atsauksme" :rules="commentRules" ref="atsauksmesText" label="Jūsu atsauksme"></v-textarea>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn outlined color="indigo" @click="saveAtsauksme">Pievienot</v-btn>
+              <v-btn outlined color="error" @click="cancelAtsauksme">Atcelt</v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-card>
+      </v-dialog>
         </template>
         <template v-else>
           <p>Lietotājs netika atrasts</p>
         </template>
       </template>
     </v-container>
+
   </div>
 </template>
 
 <script>
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 export default {
   components: { Bar },
   data() {
     return {
+      pakRules: [v => !!v || 'Šis lauks ir nepieciešams'],
+      commentRules: [v => !!v || 'Šis lauks ir nepieciešams'],
       loading: true,
       lietotajs: null,
       responseData: '',
       snackbarColor: '',
+      showAddAtsausksmeDialog: false,
+
+      pakalpojumsOptions: [],
+      selectedRezervacija: null,
+
+      Atsauksme: '',
+      selectedPakalpojums: [],
+
       snackbar: false,
       activeTab: 0,
       piegadatajsItems: [
@@ -180,6 +231,47 @@ export default {
   },
   methods: {
 
+    addAtsauksme() {
+        this.showAddAtsausksmeDialog = true;
+    },
+
+    resetAtsauksme() {
+      console.log('Atjaunošana');
+      this.Atsauksme = '';
+      this.selectedAdvertisement = null;
+    },
+
+    cancelAtsauksme() {
+      this.resetAtsauksme();
+      this.showAddAtsausksmeDialog = false;
+    },
+
+    async saveAtsauksme() {
+      try {
+        const response = await this.$axios.post('/api/v2/atsauksmes/', {
+          KlientsID: this.$store.getters.getUserInfo.ID,
+          Atsauksme: this.Atsauksme,
+          Pakalpojums_id: this.selectedPakalpojums,
+        })
+        if(response){
+          if(response.status == 200){
+            this.showSnackbar('green', response.data.message)
+            this.showAddAtsausksmeDialog = false;
+            this.getAtsauksmes()
+          }
+          this.showAddAtsausksmeDialog = false;
+          this.getAtsauksmes();
+        }
+      } catch (error){
+        if (error.response) {
+          this.showSnackbar('red', error.response.data.message);
+        } else {
+          this.showSnackbar('red', 'Notika kļūda pievienojot atsauksmi');
+          console.log(error)
+        }
+      }
+    },
+
     updateUserData(){
       this.UserInfo = {
         Vards: this.userInfo.Vards,
@@ -197,8 +289,9 @@ export default {
           ID: this.id
         });
 
-        if (response.data) {
+        if (response.status == 200) {
           this.lietotajs = response.data;
+          this.pakalpojumsOptions = response.data.Pakalpojums_Pakalpojums_PiegadatajsToPiegadatajs
         } else {
           this.$router.push('/404');
         }

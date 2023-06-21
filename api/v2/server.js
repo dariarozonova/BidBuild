@@ -27,6 +27,8 @@ const atsauksmes = require('./routers/atsauksmeRouter')
 
 const profils = require('./routers/profileRouter')
 
+const pilsetas = require('./routers/pilsetaRouter')
+
 app.use('/api/v2/pakalpojumi', pakalpojumi)
 
 app.use('/api/v2/rezervacijas', rezervacijas)
@@ -42,6 +44,8 @@ app.use('/api/v2/grafiks', grafiks)
 app.use('/api/v2/atsauksmes', atsauksmes)
 
 app.use('/api/v2/profils', profils)
+
+app.use('/api/v2/pilseta', pilsetas)
 
 
 

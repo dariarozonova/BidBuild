@@ -240,16 +240,22 @@
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field label="First Name" v-model="editUserInfo.Vards"></v-text-field>
+              <v-text-field label="Vārds" v-model="editUserInfo.Vards"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field label="Last Name" v-model="editUserInfo.Uzvards"></v-text-field>
+              <v-text-field label="Uzvārds" v-model="editUserInfo.Uzvards"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field label="Phone Number" v-model="editUserInfo.Numurs"></v-text-field>
+              <v-text-field label="Telefona numurs" v-model="editUserInfo.Numurs"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field label="City" v-model="editUserInfo.Pilseta"></v-text-field>
+              <v-select
+                v-model="editUserInfo.Pilseta"
+                :items="this.pilsetas"
+                item-text="Pilsetas_nosaukums"
+                item-value="Pilsetas_nosaukums"
+                label="Pilsēta"
+              ></v-select>
             </v-col>
           </v-row>
         </v-card-text>
@@ -361,7 +367,7 @@
     </v-card>
   </v-dialog>
   </v-container>
-<Footer />
+  <Footer />
   </div>
 </template>
 
@@ -385,7 +391,7 @@ export default {
   components: { Bar },
   data() {
     return {
-
+      pilsetas: [],
       loaded: false,
       chartData: null,
       lastUpdate: null,
@@ -443,6 +449,8 @@ export default {
       Atsauksmes: [],
       pakalpojumsOptions: [],
       rezervetiePakalpojumi: [],
+
+
       selectedRezervacija: null,
       options: [
         '',
@@ -484,6 +492,7 @@ export default {
         Numurs: this.userInfo.Numurs,
         Pilseta: this.userInfo.Pilseta,
       };
+      this.getPilsetas();
       this.editDialog = true;
     },
 
@@ -534,6 +543,19 @@ export default {
         this.Atsauksmes = response.data;
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    async getPilsetas(){
+      try {
+        const response = await this.$axios.get('/api/v2/pilseta')
+        this.pilsetas = response.data
+      } catch(error) {
+        if(error.response){
+          this.showSnackbar('error', error.response.data.message)
+        } else {
+          this.showSnackbar('error', 'Notika kļūda :/')
+        }
       }
     },
 
